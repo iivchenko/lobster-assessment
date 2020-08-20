@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Story.Application.Domain.Stories;
+using Story.Host.Utilities.Middlewares;
 using Story.Infrastructure.Stories;
 using System;
 
@@ -55,6 +56,10 @@ namespace Story.Host
             {
                 app.UseSpaStaticFiles();
             }
+
+            app.UseWhen(
+                context => context.Request.Path.StartsWithSegments("/api"),
+                builder => builder.UseMiddleware<ExceptionHandlingMiddleware>());
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
