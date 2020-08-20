@@ -9,10 +9,10 @@ namespace Story.Application.Queries.GetAnswer
 
         public string Text { get; set; }
 
-        public IEnumerable<GetAnswerQueryQuestion> Questions { get; set; }
+        public IEnumerable<GetAnswerQueryResponseQuestion> Questions { get; set; }
     }
 
-    public sealed class GetAnswerQueryQuestion
+    public sealed class GetAnswerQueryResponseQuestion
     {
         public Guid Id { get; set; }
 
