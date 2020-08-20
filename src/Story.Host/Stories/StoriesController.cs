@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Story.Application.Queries.GetStories;
+using Story.Application.Queries.GetStory;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,9 +31,11 @@ namespace Story.Host.Stories
         }
 
         [HttpGet("{id}")]
-        public Task<StoryViewModel> Story(Guid id)
+        public async Task<StoryViewModel> Story(Guid id)
         {
-            return Task.FromResult((StoryViewModel)null);
+            var response = await _mediator.Send(new GetStoryQuery { Id = id } );
+
+            return _mapper.Map<StoryViewModel>(response);
         }
 
         [HttpGet("{storyId}/questions/{questionId}")]

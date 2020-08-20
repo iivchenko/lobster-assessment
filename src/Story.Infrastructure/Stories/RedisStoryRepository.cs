@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using AStory = Story.Application.Domain.Stories.Story;
+
 namespace Story.Infrastructure.Stories
 {
     public sealed class RedisStoryRepository : IStoryRepository, IDisposable
@@ -24,15 +26,20 @@ namespace Story.Infrastructure.Stories
             };
         }
 
-        public Task<Application.Domain.Stories.Story> Read(Guid id)
+        public Task<AStory> Read(Guid id)
         {
             var value = _redis.GetDatabase().StringGet($"{KeyPattern}{id}");
+            if (value.IsNull)
+            {
+                return Task.FromResult((AStory)null);
+            }
+
             var story = JsonConvert.DeserializeObject<Application.Domain.Stories.Story>(value, _settings);
 
             return Task.FromResult(story);
         }
 
-        public Task<IEnumerable<Application.Domain.Stories.Story>> ReadAll()
+        public Task<IEnumerable<AStory>> ReadAll()
         {
             var server = _redis.GetServer(_redis.GetEndPoints().First());
             var db = _redis.GetDatabase();
@@ -45,7 +52,7 @@ namespace Story.Infrastructure.Stories
             return Task.FromResult(stories);
         }
 
-        public Task Update(Application.Domain.Stories.Story story)
+        public Task Update(AStory story)
         {
             var db = _redis.GetDatabase();
             db.StringSet($"{KeyPattern}{story.Id}", JsonConvert.SerializeObject(story, _settings));

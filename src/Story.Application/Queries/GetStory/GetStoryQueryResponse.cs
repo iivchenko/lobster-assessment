@@ -10,6 +10,6 @@ namespace Story.Application.Queries.GetStory
 
         public string Description { get; set; }
 
-        public Guid RootQuestion { get; }
+        public Guid RootQuestionId { get; set; }
     }
 }
