@@ -48,8 +48,11 @@ namespace Story.Application.Tests.Queries.GetStory
                 Throws
                     .InstanceOf<EntityNotFoundException>()
                     .With
-                    .Property("Id")
-                    .EqualTo(id));
+                    .Property(nameof(EntityNotFoundException.Id))
+                    .EqualTo(id)
+                    .And
+                    .Property(nameof(EntityNotFoundException.Type))
+                    .EqualTo(nameof(Story.Application.Domain.Stories.Story)));
         }
 
         [Test]

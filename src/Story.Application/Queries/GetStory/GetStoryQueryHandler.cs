@@ -25,7 +25,7 @@ namespace Story.Application.Queries.GetStory
 
             if (story == null)
             {
-                throw new EntityNotFoundException(query.Id);
+                throw new EntityNotFoundException(query.Id, nameof(Story));
             }
 
             return _mapper.Map<GetStoryQueryResponse>(story);
