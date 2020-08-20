@@ -10,6 +10,6 @@ namespace Story.Application.Domain.Stories
 
         public string Description { get; set; }
 
-        public Question Root { get; }
+        public Question Root { get; set; }
     }
 }

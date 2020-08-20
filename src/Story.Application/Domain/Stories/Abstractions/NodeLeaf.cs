@@ -6,22 +6,12 @@ namespace Story.Application.Domain.Stories.Abstractions
     {
         public static readonly NodeLeaf Empty = new EmptyNode();
 
-        internal NodeLeaf(Guid id)
-        {
-            Id = id;
-        }
-
-        public Guid Id { get; }
+        public Guid Id { get; set; }
 
         public abstract NodeLeaf Accept(IVisitor visitor);
 
         private sealed class EmptyNode : NodeLeaf
         {
-            public EmptyNode() 
-                : base(Guid.Empty)
-            {
-            }
-
             public override NodeLeaf Accept(IVisitor visitor)
             {
                 return this;

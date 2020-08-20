@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Story.Application.Domain.Stories;
+using Story.Infrastructure.Stories;
 using System;
 
 namespace Story.Host
@@ -23,6 +25,8 @@ namespace Story.Host
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddScoped<IStoryRepository, RedisStoryRepository>(x => new RedisStoryRepository(Configuration.GetConnectionString("Redis")));
 
             services.AddControllersWithViews();
             services.AddSpaStaticFiles(configuration =>

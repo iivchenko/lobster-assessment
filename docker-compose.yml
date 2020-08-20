@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  story.host:
+    image: ${DOCKER_REGISTRY-}storyhost
+    build:
+      context: .
+      dockerfile: src/Story.Host/Dockerfile
+    environment:
+      - ConnectionStrings__Redis=redis
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
