@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using Story.Application.Domain.Stories;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,11 +19,16 @@ namespace Story.Application.Queries.GetStory
             _mapper = mapper;
         }
 
-        public Task<GetStoryQueryResponse> Handle(GetStoryQuery request, CancellationToken cancellationToken)
+        public async Task<GetStoryQueryResponse> Handle(GetStoryQuery query, CancellationToken cancellationToken)
         {
-            // Get story by Id
-            // map and rturn
-            throw new NotImplementedException();
+            var story = await _storyRepository.Read(query.Id);
+
+            if (story == null)
+            {
+                throw new EntityNotFoundException(query.Id);
+            }
+
+            return _mapper.Map<GetStoryQueryResponse>(story);
         }
     }
 }
