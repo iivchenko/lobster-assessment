@@ -1,14 +1,16 @@
 ﻿using Story.Application.Domain.Stories.Abstractions;
+using System;
 
 namespace Story.Application.Domain.Stories
 {
     public sealed class TheEnd : NodeLeaf
     {
-        public string Message { get; set; }
-
-        public override NodeLeaf Accept(IVisitor visitor)
+        public TheEnd(Guid id, string message)
+            : base (id)
         {
-            return visitor.VisitTheEnd(this);
+            Message = message;
         }
+
+        public string Message { get; private set; }
     }
 }

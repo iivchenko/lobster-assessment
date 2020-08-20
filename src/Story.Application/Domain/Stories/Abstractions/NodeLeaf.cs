@@ -6,15 +6,18 @@ namespace Story.Application.Domain.Stories.Abstractions
     {
         public static readonly NodeLeaf Empty = new EmptyNode();
 
-        public Guid Id { get; set; }
+        protected NodeLeaf(Guid id)
+        {
+            Id = id;
+        }       
 
-        public abstract NodeLeaf Accept(IVisitor visitor);
+        public Guid Id { get; private set; }
 
         private sealed class EmptyNode : NodeLeaf
         {
-            public override NodeLeaf Accept(IVisitor visitor)
+            public EmptyNode()
+                : base(Guid.Empty)
             {
-                return this;
             }
         }
     }

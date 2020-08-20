@@ -84,46 +84,25 @@ namespace Story.Application.Tests.Queries.GetStories
 
         private static AStory CreateStory(string name)
         {
-            return new AStory
-            {
-                Id = Guid.NewGuid(),
-                Name = name,
-                Description = "This is the story of.. some ones life",
-                Root = new Question
-                {
-                    Id = Guid.NewGuid(),
-                    Text = "Are you hungry?",
-                    Nodes = new[]
-                    {
-                        new Answer
-                        {
-                            Id = Guid.NewGuid(),
-                            Text = "Yes",
-                            Nodes = new[]
-                            {
-                                new TheEnd
-                                {
-                                    Id = Guid.NewGuid(),
-                                    Message = "You said yes!"
-                                }
-                            }
-                        },
-                        new Answer
-                        {
-                            Id = Guid.NewGuid(),
-                            Text = "No",
-                            Nodes = new[]
-                            {
-                                new TheEnd
-                                {
-                                    Id = Guid.NewGuid(),
-                                    Message = "You said no!"
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+            return new AStory(
+                Guid.NewGuid(),
+                name,
+                "This is the story of.. some ones life",
+                CreateQuestion(
+                    "Are you hungry?",
+                    CreateAnswer("Yes", "You said yes!"),
+                    CreateAnswer("No", "You said no!")
+                ));
+        }
+
+        private static Question CreateQuestion(string text, params Answer[] answers)
+        {
+            return new Question(Guid.NewGuid(), text, answers);
+        }
+
+        private static Answer CreateAnswer(string text, string end)
+        {
+            return new Answer(Guid.NewGuid(), text, new[] { new TheEnd(Guid.NewGuid(), end) });
         }
     }
 }

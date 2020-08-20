@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Story.Application.Domain.Stories;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using AStory = Story.Application.Domain.Stories.Story;
@@ -21,101 +22,51 @@ namespace Story.Host
 
                 if (!stories.Any())
                 {
-                    var story1 = CreateStory1();
-                    var story2 = CreateStory2();
-
-                    repository.Update(story1).GetAwaiter().GetResult();
-                    repository.Update(story2).GetAwaiter().GetResult();
+                    repository.Update(CreateStory1()).GetAwaiter().GetResult();
+                    repository.Update(CreateStory2()).GetAwaiter().GetResult();
                 }
             }
         }
 
         private static AStory CreateStory1()
         {
-            return new AStory
-            {
-                Id = Guid.NewGuid(),
-                Name = "Test Story",
-                Description = "This is the story of.. some ones life",
-                Root = new Question
-                {
-                    Id = Guid.NewGuid(),
-                    Text = "Are you hungry?",
-                    Nodes = new[]
-                    {
-                        new Answer
-                        {
-                            Id = Guid.NewGuid(),
-                            Text = "Yes",
-                            Nodes = new[]
-                            {
-                                new TheEnd
-                                {
-                                    Id = Guid.NewGuid(),
-                                    Message = "You said yes!"
-                                }
-                            }
-                        },
-                        new Answer
-                        {
-                            Id = Guid.NewGuid(),
-                            Text = "No",
-                            Nodes = new[]
-                            {
-                                new TheEnd
-                                {
-                                    Id = Guid.NewGuid(),
-                                    Message = "You said no!"
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+            return new AStory(
+                Guid.NewGuid(),
+                "Test Story",
+                "This is the story of.. some ones life",
+                CreateQuestion(
+                    "Are you hungry?",
+                    CreateAnswer("Yes", "You said yes!"),
+                    CreateAnswer("No", "You said no!")
+                ));
         }
 
         private static AStory CreateStory2()
         {
-            return new AStory
-            {
-                Id = Guid.NewGuid(),
-                Name = "Test Story 2",
-                Description = "This story about story",
-                Root = new Question
-                {
-                    Id = Guid.NewGuid(),
-                    Text = "To be or not be?",
-                    Nodes = new[]
-                    {
-                        new Answer
-                        {
-                            Id = Guid.NewGuid(),
-                            Text = "To be",
-                            Nodes = new[]
-                            {
-                                new TheEnd
-                                {
-                                    Id = Guid.NewGuid(),
-                                    Message = "You like Hamlet"
-                                }
-                            }
-                        },
-                        new Answer
-                        {
-                            Id = Guid.NewGuid(),
-                            Text = "NO",
-                            Nodes = new[]
-                            {
-                                new TheEnd
-                                {
-                                    Id = Guid.NewGuid(),
-                                    Message = "You don't like Hamlet"
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+            return new AStory(
+               Guid.NewGuid(),
+               "Test Story 2",
+               "This story about story",
+               CreateQuestion(
+                   "To be or not be?",
+                   CreateAnswer("To be", "You like Hamlet"),
+                   CreateAnswer("Not to be", "Why don't you like Hamlet?")
+               ));
+        }
+
+        private static Question CreateQuestion(string text, params Answer[] answers)
+        {
+            return new Question(Guid.NewGuid(), text, answers);
+        }
+
+        private static Answer CreateAnswer(string text, string end)
+        {
+            return new Answer(Guid.NewGuid(), text, new[] { new TheEnd(Guid.NewGuid(), end) });
+        }
+
+        private static Answer CreateAnswer(string text, IEnumerable<Question> questions)
+        {
+            return new Answer(Guid.NewGuid(), text, questions);
         }
     }
 }

@@ -65,7 +65,7 @@ namespace Story.Application.Tests.Queries.GetStory
                 Id = id
             };
 
-            var story = new AStory();
+            var story = new AStory(Guid.Empty, string.Empty, string.Empty, null);
             var expectedRsponse = new GetStoryQueryResponse();
 
             _storyRepository

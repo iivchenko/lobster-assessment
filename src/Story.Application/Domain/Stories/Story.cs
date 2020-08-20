@@ -4,12 +4,24 @@ namespace Story.Application.Domain.Stories
 {
     public sealed class Story
     {
-        public Guid Id { get; set; }
+        public Story(
+            Guid id, 
+            string name, 
+            string description,
+            Question root)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            Root = root;
+        }
 
-        public string Name { get; set; }
+        public Guid Id { get; private set; }
 
-        public string Description { get; set; }
+        public string Name { get; private set; }
 
-        public Question Root { get; set; }
+        public string Description { get; private set; }
+
+        public Question Root { get; private set; }
     }
 }
