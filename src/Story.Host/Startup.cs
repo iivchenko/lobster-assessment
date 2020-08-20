@@ -79,11 +79,7 @@ namespace Story.Host
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
+                spa.UseProxyToSpaDevelopmentServer("http://story.angular.app:4200");
             });
         }
     }
