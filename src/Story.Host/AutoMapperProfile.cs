@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Story.Application.Domain.Stories;
+using Story.Application.Queries.GetQuestion;
 using Story.Application.Queries.GetStories;
 using Story.Application.Queries.GetStory;
 using Story.Host.Stories;
@@ -15,8 +17,13 @@ namespace Story.Host
 
             CreateMap<AStory, GetStoryQueryResponse>()
                 .ForMember(dest => dest.RootQuestionId, opt => opt.MapFrom(src => src.Root.Id));
-
             CreateMap<GetStoryQueryResponse, StoryViewModel>();
+
+            CreateMap<Question, GetQuestionResponse>()
+                .ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Nodes));
+            CreateMap<Answer, GetQuestionResponseAnswer>();
+            CreateMap<GetQuestionResponse, QuestionViewModel>();
+            CreateMap<GetQuestionResponseAnswer, AnswerSummaryViewModel>();
         }
     }
 }

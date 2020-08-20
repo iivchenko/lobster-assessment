@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Story.Application.Queries.GetQuestion;
 using Story.Application.Queries.GetStories;
 using Story.Application.Queries.GetStory;
 using System;
@@ -39,9 +40,11 @@ namespace Story.Host.Stories
         }
 
         [HttpGet("{storyId}/questions/{questionId}")]
-        public Task<QuestionViewModel> Question(Guid storyId, Guid questionId)
+        public async Task<QuestionViewModel> Question(Guid storyId, Guid questionId)
         {
-            return Task.FromResult((QuestionViewModel)null);
+            var response = await _mediator.Send(new GetQuestionQuery { StoryId = storyId, QuestionId = questionId });
+
+            return _mapper.Map<QuestionViewModel>(response);
         }
 
         [HttpGet("{storyId}/answers/{answerId}")]
