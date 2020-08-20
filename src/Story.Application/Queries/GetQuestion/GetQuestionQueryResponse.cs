@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace Story.Application.Queries.GetQuestion
 {
-    public sealed class GetQuestionResponse
+    public sealed class GetQuestionQueryResponse
     {
         public Guid Id { get; set; }
 
         public string Text { get; set; }
 
-        public IEnumerable<GetQuestionResponseAnswer> Answers { get; set; }
+        public IEnumerable<GetQuestionQueryResponseAnswer> Answers { get; set; }
     }
 
-    public sealed class GetQuestionResponseAnswer
+    public sealed class GetQuestionQueryResponseAnswer
     {
         public Guid Id { get; set; }
 

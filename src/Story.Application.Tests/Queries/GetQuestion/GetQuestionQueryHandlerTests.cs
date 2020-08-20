@@ -107,7 +107,7 @@ namespace Story.Application.Tests.Queries.GetQuestion
             var question = CreateQuestion("question", questionId);
             var story = CreateStory("test", storyId, question);
 
-            var expectedRsponse = new GetQuestionResponse
+            var expectedRsponse = new GetQuestionQueryResponse
             {
                 Id = questionId
             };
@@ -117,7 +117,7 @@ namespace Story.Application.Tests.Queries.GetQuestion
                 .ReturnsAsync(story);
 
             _mapper
-                .Setup(x => x.Map<GetQuestionResponse>(question))
+                .Setup(x => x.Map<GetQuestionQueryResponse>(question))
                 .Returns(expectedRsponse);
 
             //Act
@@ -157,7 +157,7 @@ namespace Story.Application.Tests.Queries.GetQuestion
                 )
             );
 
-            var expectedRsponse = new GetQuestionResponse
+            var expectedRsponse = new GetQuestionQueryResponse
             {
                 Id = questionId
             };
@@ -167,7 +167,7 @@ namespace Story.Application.Tests.Queries.GetQuestion
                 .ReturnsAsync(story);
 
             _mapper
-                .Setup(x => x.Map<GetQuestionResponse>(question))
+                .Setup(x => x.Map<GetQuestionQueryResponse>(question))
                 .Returns(expectedRsponse);
 
             //Act

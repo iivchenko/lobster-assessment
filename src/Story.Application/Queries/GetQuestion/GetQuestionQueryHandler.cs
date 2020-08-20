@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Story.Application.Queries.GetQuestion
 {
-    public sealed class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, GetQuestionResponse>
+    public sealed class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, GetQuestionQueryResponse>
     {
         private readonly IStoryRepository _storyRepository;
         private readonly IMapper _mapper;
@@ -21,7 +21,7 @@ namespace Story.Application.Queries.GetQuestion
             _mapper = mapper;
         }
 
-        public async Task<GetQuestionResponse> Handle(GetQuestionQuery query, CancellationToken cancellationToken)
+        public async Task<GetQuestionQueryResponse> Handle(GetQuestionQuery query, CancellationToken cancellationToken)
         {
             var story = await _storyRepository.Read(query.StoryId);
 
@@ -37,7 +37,7 @@ namespace Story.Application.Queries.GetQuestion
                 throw new EntityNotFoundException(query.QuestionId, nameof(Question));
             }
 
-            return _mapper.Map<GetQuestionResponse>(question);
+            return _mapper.Map<GetQuestionQueryResponse>(question);
         }
 
         private static Question Find(Question question, Guid id)

@@ -19,11 +19,11 @@ namespace Story.Host
                 .ForMember(dest => dest.RootQuestionId, opt => opt.MapFrom(src => src.Root.Id));
             CreateMap<GetStoryQueryResponse, StoryViewModel>();
 
-            CreateMap<Question, GetQuestionResponse>()
+            CreateMap<Question, GetQuestionQueryResponse>()
                 .ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Nodes));
-            CreateMap<Answer, GetQuestionResponseAnswer>();
-            CreateMap<GetQuestionResponse, QuestionViewModel>();
-            CreateMap<GetQuestionResponseAnswer, AnswerSummaryViewModel>();
+            CreateMap<Answer, GetQuestionQueryResponseAnswer>();
+            CreateMap<GetQuestionQueryResponse, QuestionViewModel>();
+            CreateMap<GetQuestionQueryResponseAnswer, AnswerSummaryViewModel>();
         }
     }
 }
