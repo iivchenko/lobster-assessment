@@ -2,6 +2,8 @@
 using MediatR;
 using Story.Application.Domain.Stories;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,13 +22,47 @@ namespace Story.Application.Queries.GetAnswer
             _mapper = mapper;
         }
 
-        public Task<GetAnswerQueryResponse> Handle(GetAnswerQuery request, CancellationToken cancellationToken)
+        public async Task<GetAnswerQueryResponse> Handle(GetAnswerQuery query, CancellationToken cancellationToken)
         {
-            // get story
-            // if no - throws
-            // find - answer
-            // if no - throws
-            throw new NotImplementedException();
+            var story = await _storyRepository.Read(query.StoryId);
+
+            if (story == null)
+            {
+                throw new EntityNotFoundException(query.StoryId, nameof(Story));
+            }
+
+            var answer = Find(story.Root.Nodes.Cast<Answer>(), query.AnswerId);
+
+            if (answer == null)
+            {
+                throw new EntityNotFoundException(query.AnswerId, nameof(Answer));
+            }
+
+            return _mapper.Map<GetAnswerQueryResponse>(answer);
+        }
+
+        private static Answer Find(IEnumerable<Answer> answers, Guid id)
+        {
+            foreach(var answer in answers)
+            {
+                if (answer.Id == id)
+                {
+                    return answer;
+                }
+
+                var nested =
+                    answer
+                        .Nodes
+                        .Where(x => x is Question)
+                        .Cast<Question>()
+                        .SelectMany(x => x.Nodes)
+                        .Where(x => x is Answer)
+                        .Cast<Answer>();
+
+                return Find(nested, id);
+            }
+
+            return null;
         }
     }
 }

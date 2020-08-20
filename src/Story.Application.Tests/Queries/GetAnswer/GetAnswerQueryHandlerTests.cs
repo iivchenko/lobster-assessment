@@ -5,9 +5,9 @@ using Story.Application.Domain.Stories;
 using Story.Application.Queries;
 using Story.Application.Queries.GetAnswer;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using AStory = Story.Application.Domain.Stories.Story;
 
 namespace Story.Application.Tests.Queries.GetAnswer
