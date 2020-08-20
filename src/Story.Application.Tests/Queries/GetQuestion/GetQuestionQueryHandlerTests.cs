@@ -104,8 +104,58 @@ namespace Story.Application.Tests.Queries.GetQuestion
                 QuestionId = questionId
             };
 
-            var question = CreateQuestion("question", storyId);
+            var question = CreateQuestion("question", questionId);
             var story = CreateStory("test", storyId, question);
+
+            var expectedRsponse = new GetQuestionResponse
+            {
+                Id = questionId
+            };
+
+            _storyRepository
+                .Setup(x => x.Read(storyId))
+                .ReturnsAsync(story);
+
+            _mapper
+                .Setup(x => x.Map<GetQuestionResponse>(question))
+                .Returns(expectedRsponse);
+
+            //Act
+            var response = await _handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            Assert.That(response.Id, Is.EqualTo(questionId));
+        }
+
+        [Test]
+        public async Task Handle_NecessaryQuestionIsDeep_Returns()
+        {
+            // Arrange
+            var storyId = Guid.NewGuid();
+            var questionId = Guid.NewGuid();
+
+            var query = new GetQuestionQuery
+            {
+                StoryId = storyId,
+                QuestionId = questionId
+            };
+
+            var question = CreateQuestion("question", questionId);
+            var story = CreateStory
+            (
+                "test",
+                storyId,
+                CreateQuestion
+                (
+                    "fake",
+                    Guid.NewGuid(),
+                    CreateAnswer
+                    (
+                        "fake",
+                        question
+                    )
+                )
+            );
 
             var expectedRsponse = new GetQuestionResponse
             {
@@ -139,6 +189,16 @@ namespace Story.Application.Tests.Queries.GetQuestion
         private static Question CreateQuestion(string text, Guid id)
         {
             return new Question(id, text, Enumerable.Empty<Answer>());
+        }
+
+        private static Question CreateQuestion(string text, Guid id, params Answer[] answers)
+        {
+            return new Question(Guid.NewGuid(), text, answers);
+        }
+
+        private static Answer CreateAnswer(string text, params Question[] questions)
+        {
+            return new Answer(Guid.NewGuid(), text, questions);
         }
     }
 }

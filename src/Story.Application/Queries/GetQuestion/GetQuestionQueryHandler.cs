@@ -2,6 +2,7 @@
 using MediatR;
 using Story.Application.Domain.Stories;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,14 +21,45 @@ namespace Story.Application.Queries.GetQuestion
             _mapper = mapper;
         }
 
-        public Task<GetQuestionResponse> Handle(GetQuestionQuery request, CancellationToken cancellationToken)
+        public async Task<GetQuestionResponse> Handle(GetQuestionQuery query, CancellationToken cancellationToken)
         {
-            // get story by id
-            // if no story - throws
-            // find question by id 
-            // if no questio - throws
-            // map and return question
-            throw new NotImplementedException();
+            var story = await _storyRepository.Read(query.StoryId);
+
+            if (story == null)
+            {
+                throw new EntityNotFoundException(query.StoryId, nameof(Story));
+            }
+
+            var question = Find(story.Root, query.QuestionId);
+
+            if (question == null)
+            {
+                throw new EntityNotFoundException(query.QuestionId, nameof(Question));
+            }
+
+            return _mapper.Map<GetQuestionResponse>(question);
+        }
+
+        private static Question Find(Question question, Guid id)
+        {
+            if (question.Id == id)
+            {
+                return question;
+            }
+
+            var nested = question
+                .Nodes
+                .Cast<Answer>()
+                .SelectMany(x => x.Nodes)
+                .Where(x => x is Question)
+                .Cast<Question>();
+
+            foreach (var q in nested)
+            {
+                return Find(q, id);
+            }
+
+            return null;
         }
     }
 }
