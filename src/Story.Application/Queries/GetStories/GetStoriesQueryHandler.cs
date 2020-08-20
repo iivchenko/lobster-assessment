@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Story.Application.Domain.Stories;
-using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,11 +20,14 @@ namespace Story.Application.Queries.GetStories
             _mapper = mapper;
         }
 
-        public Task<GetStoriesQueryResponse> Handle(GetStoriesQuery request, CancellationToken cancellationToken)
+        public async Task<GetStoriesQueryResponse> Handle(GetStoriesQuery request, CancellationToken cancellationToken)
         {
-            // Use story repo to get all stories
-            // map from domain model to Query model and return
-            throw new NotImplementedException();
+            var stories = await _storyRepository.ReadAll();
+
+            return new GetStoriesQueryResponse
+            {
+                Stories = _mapper.Map<IEnumerable<GetStoryQueryStorySummary>>(stories)
+            };
         }
     }
 }

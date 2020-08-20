@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Story.Application.Domain.Stories;
 using Story.Application.Queries.GetStories;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,26 +57,29 @@ namespace Story.Application.Tests.Queries.GetStories
             var query = new GetStoriesQuery();
             var story1 = CreateStory("Story 1");
             var story2 = CreateStory("Story 2");
+            var stories = new[] { story1, story2 };
+
+            var expectedSummaries = new []
+            {
+                new GetStoryQueryStorySummary { Name = "Story 1 Item" },
+                new GetStoryQueryStorySummary { Name = "Story 2 Item" }
+            };
 
             _storyRepository
                 .Setup(x => x.ReadAll())
                 .ReturnsAsync(new[] { story1, story2 });
 
             _mapper
-                .Setup(x => x.Map<GetStoryQueryStorySummary>(story1))
-                .Returns(new GetStoryQueryStorySummary { Name = "Story 1 Item" });
-
-            _mapper
-                .Setup(x => x.Map<GetStoryQueryStorySummary>(story2))
-                .Returns(new GetStoryQueryStorySummary { Name = "Story 2 Item" });
+                .Setup(x => x.Map<IEnumerable<GetStoryQueryStorySummary>>(stories))
+                .Returns(expectedSummaries);
 
             // Act
             var response = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
             Assert.That(response.Stories.Count(), Is.EqualTo(2));
-            Assert.That(response.Stories.ElementAt(1).Name, Is.EqualTo("Story 1 Item"));
-            Assert.That(response.Stories.ElementAt(2).Name, Is.EqualTo("Story 2 Item"));
+            Assert.That(response.Stories.ElementAt(0).Name, Is.EqualTo("Story 1 Item"));
+            Assert.That(response.Stories.ElementAt(1).Name, Is.EqualTo("Story 2 Item"));
         }
 
         private static AStory CreateStory(string name)
@@ -90,34 +94,34 @@ namespace Story.Application.Tests.Queries.GetStories
                     Id = Guid.NewGuid(),
                     Text = "Are you hungry?",
                     Nodes = new[]
+                    {
+                        new Answer
+                        {
+                            Id = Guid.NewGuid(),
+                            Text = "Yes",
+                            Nodes = new[]
                             {
-                                new Answer
+                                new TheEnd
                                 {
                                     Id = Guid.NewGuid(),
-                                    Text = "Yes",
-                                    Nodes = new[]
-                                    {
-                                        new TheEnd
-                                        {
-                                            Id = Guid.NewGuid(),
-                                            Message = "You said yes!"
-                                        }
-                                    }
-                                },
-                                new Answer
-                                {
-                                    Id = Guid.NewGuid(),
-                                    Text = "No",
-                                    Nodes = new[]
-                                    {
-                                        new TheEnd
-                                        {
-                                            Id = Guid.NewGuid(),
-                                            Message = "You said no!"
-                                        }
-                                    }
+                                    Message = "You said yes!"
                                 }
                             }
+                        },
+                        new Answer
+                        {
+                            Id = Guid.NewGuid(),
+                            Text = "No",
+                            Nodes = new[]
+                            {
+                                new TheEnd
+                                {
+                                    Id = Guid.NewGuid(),
+                                    Message = "You said no!"
+                                }
+                            }
+                        }
+                    }
                 }
             };
         }

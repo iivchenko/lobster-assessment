@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Story.Application.Queries.GetStories;
+using AStory = Story.Application.Domain.Stories.Story;
 
 namespace Story.Host
 {
@@ -6,7 +8,7 @@ namespace Story.Host
     {
         public AutoMapperProfile()
         {
-
+            CreateMap<AStory, GetStoryQueryStorySummary>();
         }
     }
 }
