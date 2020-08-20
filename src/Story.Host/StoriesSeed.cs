@@ -21,50 +21,101 @@ namespace Story.Host
 
                 if (!stories.Any())
                 {
-                    var story = new AStory
+                    var story1 = CreateStory1();
+                    var story2 = CreateStory2();
+
+                    repository.Update(story1).GetAwaiter().GetResult();
+                    repository.Update(story2).GetAwaiter().GetResult();
+                }
+            }
+        }
+
+        private static AStory CreateStory1()
+        {
+            return new AStory
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test Story",
+                Description = "This is the story of.. some ones life",
+                Root = new Question
+                {
+                    Id = Guid.NewGuid(),
+                    Text = "Are you hungry?",
+                    Nodes = new[]
                     {
-                        Id = Guid.NewGuid(),
-                        Name = "Test Story",
-                        Description = "This is the story of.. some ones life",
-                        Root = new Question
+                        new Answer
                         {
                             Id = Guid.NewGuid(),
-                            Text = "Are you hungry?",
+                            Text = "Yes",
                             Nodes = new[]
                             {
-                                new Answer
+                                new TheEnd
                                 {
                                     Id = Guid.NewGuid(),
-                                    Text = "Yes",
-                                    Nodes = new[]
-                                    {
-                                        new TheEnd
-                                        {
-                                            Id = Guid.NewGuid(),
-                                            Message = "You said yes!"
-                                        }
-                                    }
-                                },
-                                new Answer
+                                    Message = "You said yes!"
+                                }
+                            }
+                        },
+                        new Answer
+                        {
+                            Id = Guid.NewGuid(),
+                            Text = "No",
+                            Nodes = new[]
+                            {
+                                new TheEnd
                                 {
                                     Id = Guid.NewGuid(),
-                                    Text = "No",
-                                    Nodes = new[]
-                                    {
-                                        new TheEnd
-                                        {
-                                            Id = Guid.NewGuid(),
-                                            Message = "You said no!"
-                                        }
-                                    }
+                                    Message = "You said no!"
                                 }
                             }
                         }
-                    };
-
-                    repository.Update(story).GetAwaiter().GetResult();
+                    }
                 }
-            }
+            };
+        }
+
+        private static AStory CreateStory2()
+        {
+            return new AStory
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test Story 2",
+                Description = "This story about story",
+                Root = new Question
+                {
+                    Id = Guid.NewGuid(),
+                    Text = "To be or not be?",
+                    Nodes = new[]
+                    {
+                        new Answer
+                        {
+                            Id = Guid.NewGuid(),
+                            Text = "To be",
+                            Nodes = new[]
+                            {
+                                new TheEnd
+                                {
+                                    Id = Guid.NewGuid(),
+                                    Message = "You like Hamlet"
+                                }
+                            }
+                        },
+                        new Answer
+                        {
+                            Id = Guid.NewGuid(),
+                            Text = "NO",
+                            Nodes = new[]
+                            {
+                                new TheEnd
+                                {
+                                    Id = Guid.NewGuid(),
+                                    Message = "You don't like Hamlet"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
         }
     }
 }
