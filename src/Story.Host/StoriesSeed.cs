@@ -22,36 +22,97 @@ namespace Story.Host
 
                 if (!stories.Any())
                 {
+                    repository.Update(CreateDoughnutHuntStory()).GetAwaiter().GetResult();
                     repository.Update(CreateStory1()).GetAwaiter().GetResult();
-                    repository.Update(CreateStory2()).GetAwaiter().GetResult();
                 }
             }
         }
 
+        private static AStory CreateDoughnutHuntStory()
+        {
+            return 
+                new AStory
+                (
+                    Guid.NewGuid(),
+                    "Doughnut decision helper",
+                    "This is not a game! All people in the world needs the guidence on if they want or need a Doughnunt. This guide is about saving your life and preventing wars!",
+                    CreateQuestion
+                    (
+                        "Do I want a Doughnut?",
+                        CreateAnswer
+                        (
+                            "Yes",
+                            CreateQuestion
+                            (
+                                "Do I deserve it?",
+                                CreateAnswer
+                                (
+                                    "Yes",
+                                    CreateQuestion
+                                    (
+                                        "Are you sure?",
+                                        CreateAnswer
+                                        (
+                                            "Yes",
+                                            "Get it."
+                                        ),
+                                        CreateAnswer
+                                        (
+                                            "No",
+                                            "Do jumping jacks first."
+                                        )
+                                    )
+                                ),
+                                CreateAnswer
+                                (
+                                    "No",
+                                    CreateQuestion
+                                    (
+                                        "Is it a good doughnut?",
+                                        CreateAnswer
+                                        (
+                                            "Yes",
+                                            "What are you waiting for? Grab it now."
+                                        ),
+                                        CreateAnswer
+                                        (
+                                            "No",
+                                            "Wait til you find a sinful, unforgettable doughnut."
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        CreateAnswer
+                        (
+                            "No",
+                            "Maybe you want an apple?"
+                        )
+                    )
+                );
+        }
         private static AStory CreateStory1()
         {
-            return new AStory(
-                Guid.NewGuid(),
-                "Test Story",
-                "This is the story of.. some ones life",
-                CreateQuestion(
-                    "Are you hungry?",
-                    CreateAnswer("Yes", "You said yes!"),
-                    CreateAnswer("No", "You said no!")
+            return new AStory
+                (
+                    Guid.NewGuid(),
+                    "Test Story",
+                    "This is the story of.. some ones life",
+                    CreateQuestion
+                    (
+                        "Are you hungry?",
+                        CreateAnswer
+                        (
+                            "Yes",
+                            CreateQuestion
+                            (
+                                "Are you sure?",
+                                CreateAnswer("Yes", "Then eat something."),
+                                CreateAnswer("No", "So go and do some job.")
+                            )
+                        ),
+                        CreateAnswer("No", "So go and do some job.")
                 ));
-        }
-
-        private static AStory CreateStory2()
-        {
-            return new AStory(
-               Guid.NewGuid(),
-               "Test Story 2",
-               "This story about story",
-               CreateQuestion(
-                   "To be or not be?",
-                   CreateAnswer("To be", "You like Hamlet"),
-                   CreateAnswer("Not to be", "Why don't you like Hamlet?")
-               ));
         }
 
         private static Question CreateQuestion(string text, params Answer[] answers)
@@ -61,12 +122,12 @@ namespace Story.Host
 
         private static Answer CreateAnswer(string text, string end)
         {
-            return new Answer(Guid.NewGuid(), text, new[] { new TheEnd(Guid.NewGuid(), end) });
+            return new Answer(Guid.NewGuid(), text, new TheEnd(Guid.NewGuid(), end));
         }
 
-        private static Answer CreateAnswer(string text, IEnumerable<Question> questions)
+        private static Answer CreateAnswer(string text, Question question)
         {
-            return new Answer(Guid.NewGuid(), text, questions);
+            return new Answer(Guid.NewGuid(), text, question);
         }
     }
 }
