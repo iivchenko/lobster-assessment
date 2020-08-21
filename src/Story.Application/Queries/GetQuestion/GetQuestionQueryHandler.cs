@@ -50,13 +50,18 @@ namespace Story.Application.Queries.GetQuestion
             var nested = question
                 .Nodes
                 .Cast<Answer>()
-                .SelectMany(x => x.Nodes)
+                .Select(x => x.Next)
                 .Where(x => x is Question)
                 .Cast<Question>();
 
             foreach (var q in nested)
             {
-                return Find(q, id);
+                var item = Find(q, id);
+
+                if (item != null)
+                {
+                    return item;
+                }
             }
 
             return null;
