@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'story-list-component',
-  styleUrls: ['./story-list.component.css'],
   templateUrl: './story-list.component.html'
 })
 export class StoryListComponent {

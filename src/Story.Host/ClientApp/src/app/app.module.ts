@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { StoryListComponent } from './story-list/story-list.compenent'
+import { StoryComponent } from './story/story.compenent'
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { StoryListComponent } from './story-list/story-list.compenent'
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    StoryListComponent
+    StoryListComponent,
+    StoryComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -28,6 +30,7 @@ import { StoryListComponent } from './story-list/story-list.compenent'
       { path: '', component: StoryListComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'story/:id', component: StoryComponent },
     ])
   ],
   providers: [],

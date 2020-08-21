@@ -6,7 +6,7 @@
 <div class="card mt-3" *ngFor="let story of stories">
   <div class="card-body">
     <h5 class="card-title">{{ story.name }}</h5>
-    <p class="card-text">{{ story.name }}</p>
-    <a href="#" class="btn btn-primary float-right">Choose your destiny!</a>
+    <p class="card-text">{{ story.description }}</p>
+    <a [routerLink]="['/story', story.id ]" class="btn btn-primary float-right">Choose your destiny!</a>
   </div>
 </div>
