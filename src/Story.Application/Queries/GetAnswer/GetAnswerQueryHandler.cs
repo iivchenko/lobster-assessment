@@ -50,16 +50,14 @@ namespace Story.Application.Queries.GetAnswer
                     return answer;
                 }
 
-                var nested =
-                    answer
-                        .Nodes
-                        .Where(x => x is Question)
-                        .Cast<Question>()
-                        .SelectMany(x => x.Nodes)
-                        .Where(x => x is Answer)
-                        .Cast<Answer>();
+                var nested = (answer.Next as Question)?.Nodes.Cast<Answer>() ?? Enumerable.Empty<Answer>();
 
-                return Find(nested, id);
+                var item = Find(nested, id);
+
+                if (item != null)
+                {
+                    return item;
+                }
             }
 
             return null;

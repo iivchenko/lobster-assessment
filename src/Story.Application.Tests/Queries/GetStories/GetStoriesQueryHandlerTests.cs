@@ -102,7 +102,7 @@ namespace Story.Application.Tests.Queries.GetStories
 
         private static Answer CreateAnswer(string text, string end)
         {
-            return new Answer(Guid.NewGuid(), text, new[] { new TheEnd(Guid.NewGuid(), end) });
+            return new Answer(Guid.NewGuid(), text, new TheEnd(Guid.NewGuid(), end));
         }
     }
 }

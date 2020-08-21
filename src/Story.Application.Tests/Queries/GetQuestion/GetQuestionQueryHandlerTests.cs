@@ -196,9 +196,9 @@ namespace Story.Application.Tests.Queries.GetQuestion
             return new Question(Guid.NewGuid(), text, answers);
         }
 
-        private static Answer CreateAnswer(string text, params Question[] questions)
+        private static Answer CreateAnswer(string text, Question question)
         {
-            return new Answer(Guid.NewGuid(), text, questions);
+            return new Answer(Guid.NewGuid(), text, question);
         }
     }
 }

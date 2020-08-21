@@ -1,17 +1,19 @@
 ﻿using Story.Application.Domain.Stories.Abstractions;
 using System;
-using System.Collections.Generic;
 
 namespace Story.Application.Domain.Stories
 {
-    public sealed class Answer : NodeTree
+    public sealed class Answer : NodeLeaf
     {
-        public Answer(Guid id, string text, IEnumerable<NodeLeaf> nodes)
-            : base(id, nodes)
+        public Answer(Guid id, string text, NodeLeaf next)
+            : base(id)
         {
             Text = text;
+            Next = next;
         }
 
         public string Text { get; private set; }
+
+        public NodeLeaf Next { get; private set; }
     }
 }

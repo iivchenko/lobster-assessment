@@ -2,6 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using Story.Application.Domain.Stories;
+using Story.Application.Domain.Stories.Abstractions;
 using Story.Application.Queries;
 using Story.Application.Queries.GetAnswer;
 using System;
@@ -182,9 +183,14 @@ namespace Story.Application.Tests.Queries.GetAnswer
             return new Question(id, text, answers);
         }
 
-        private static Answer CreateAnswer(string text, Guid id, params Question[] questions)
+        private static Answer CreateAnswer(string text, Guid id, Question question)
         {
-            return new Answer(id, text, questions);
+            return new Answer(id, text, question);
+        }
+
+        private static Answer CreateAnswer(string text, Guid id)
+        {
+            return new Answer(id, text, NodeLeaf.Empty);
         }
     }
 }
