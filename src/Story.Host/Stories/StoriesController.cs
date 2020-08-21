@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Story.Application.Queries.GetAnswer;
+using Story.Application.Queries.GetEnd;
 using Story.Application.Queries.GetQuestion;
 using Story.Application.Queries.GetStories;
 using Story.Application.Queries.GetStory;
@@ -54,6 +55,14 @@ namespace Story.Host.Stories
             var response = await _mediator.Send(new GetAnswerQuery { StoryId = storyId, AnswerId = answerId });
 
             return _mapper.Map<AnswerViewModel>(response);
+        }
+
+        [HttpGet("{storyId}/end/{endId}")]
+        public async Task<EndViewModel> End(Guid storyId, Guid endId)
+        {
+            var response = await _mediator.Send(new GetEndQuery { StoryId = storyId, EndId = endId });
+
+            return _mapper.Map<EndViewModel>(response);
         }
     }
 }

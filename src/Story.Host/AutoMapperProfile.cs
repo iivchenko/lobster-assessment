@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Story.Application.Domain.Stories;
 using Story.Application.Queries.GetAnswer;
+using Story.Application.Queries.GetEnd;
 using Story.Application.Queries.GetQuestion;
 using Story.Application.Queries.GetStories;
 using Story.Application.Queries.GetStory;
@@ -27,9 +28,17 @@ namespace Story.Host
             CreateMap<GetQuestionQueryResponseAnswer, AnswerSummaryViewModel>();
 
             CreateMap<Answer, GetAnswerQueryResponse>();
-            CreateMap<Question, GetAnswerQueryResponseQuestion>();
-            CreateMap<GetAnswerQueryResponse, AnswerViewModel>();
-            CreateMap<GetAnswerQueryResponseQuestion, QuestionSummaryViewModel>();
+            CreateMap<Question, GetAnswerQueryResponseNext>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => GetAnswerQueryResponseNextType.Question));
+            CreateMap<TheEnd, GetAnswerQueryResponseNext>()
+                .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Message))
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => GetAnswerQueryResponseNextType.End));
+            CreateMap<GetAnswerQueryResponse, AnswerViewModel>()
+                .ForMember(dest => dest.NextEntityType, opt => opt.MapFrom(src => src.Next.Type))
+                .ForMember(dest => dest.NextEntityId, opt => opt.MapFrom(src => src.Next.Id));
+
+            CreateMap<TheEnd, GetEndQueryResponse>();
+            CreateMap<GetEndQueryResponse, EndViewModel>();
         }
     }
 }
