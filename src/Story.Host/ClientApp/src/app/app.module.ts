@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { NgxGraphModule } from '@swimlane/ngx-graph'
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -31,7 +33,9 @@ import { StoryComponent } from './story/story.compenent'
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'story/:id', component: StoryComponent },
-    ])
+    ]),
+    BrowserAnimationsModule,
+    NgxGraphModule
   ],
   providers: [],
   bootstrap: [AppComponent]
