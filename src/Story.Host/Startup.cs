@@ -29,7 +29,9 @@ namespace Story.Host
 
             services.AddScoped<IStoryRepository, RedisStoryRepository>(x => new RedisStoryRepository(Configuration.GetConnectionString("Redis")));
 
-            services.AddControllersWithViews();
+            services
+                .AddControllersWithViews()
+                .AddNewtonsoftJson();
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
