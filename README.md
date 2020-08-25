@@ -11,7 +11,9 @@ Lobster Assessment is an implementation of .NET Software Engineer Technical Assi
 * PowerShell
 
 ## How to run application without Visual Studio
-Just run **_start.bat** script
+ * Just run **_start.bat** script
+ * Grab url for **storyhost** container and open in the browser
+ * Enjoy!
 
 ## Releases
  
@@ -35,6 +37,9 @@ Just run **_start.bat** script
  * TDD
 
 ## Ideas
+ * js unit tests
+ * Back-office to create stories/questinaries
+ * Separate Angular and Api apps and docker files
 
 # License
 
