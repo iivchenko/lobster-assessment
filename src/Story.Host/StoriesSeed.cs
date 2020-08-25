@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Hosting;
 using Story.Application.Domain.Stories;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using AStory = Story.Application.Domain.Stories.Story;

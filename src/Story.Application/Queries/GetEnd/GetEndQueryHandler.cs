@@ -3,7 +3,6 @@ using MediatR;
 using Story.Application.Domain.Stories;
 using Story.Application.Domain.Stories.Abstractions;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
