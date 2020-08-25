@@ -1,0 +1,21 @@
+.graph-node {
+  text-align: center;
+}
+
+.graph-node.question {
+  background-color: lightblue;
+}
+
+
+.graph-node.answer {
+  background-color: lightgreen;
+}
+
+.graph-node.end {
+  background-color: lightyellow;
+}
+
+.graph-node.selected {
+  border: 2px solid red;
+  border-radius: 5px;
+}

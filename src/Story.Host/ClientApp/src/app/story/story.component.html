@@ -20,7 +20,7 @@
 
 <div class="mt-5" *ngIf="finish">
   <h4 class="d-flex justify-content-center">Here is your path Stranger!</h4>
-  <div class="row mt-5 ml-0 mr-0" >
+  <div class="row mt-5 ml-0 mr-0">
     <div class="col-sm m-1 d-flex justify-content-center align-items-center alert"
          [ngClass]="{'alert-primary': item.type === 1 || item.type === 4,
                    'alert-success': item.type === 2,
@@ -29,4 +29,40 @@
       <h5 class="card-title">{{ item.text }}</h5>
     </div>
   </div>
+  <div>
+    <h4 *ngIf="!treeIsBuild">Wana see more? <button type="button" class="btn btn-primary" (click)="buildTree()">Click!</button></h4>
+    <div *ngIf="treeIsBuild">
+      <ngx-graph class="chart-container card"
+                 [view]="[1000, 1000]"
+                 layout="dagre"
+                 [links]="links"
+                 [nodes]="nodes"
+                 [layoutSettings]="layoutSettings"
+                 [center$]="center$"
+                 [zoomToFit$]="zoomToFit$"
+                 [update$]="update$">
+
+        <ng-template #nodeTemplate let-node>
+          <svg:g
+                 class="node"
+                 xmlns="http://www.w3.org/2000/xhtml"
+                 width="150" height="100">
+            <svg:foreignObject width="150" height="100">
+              <xhtml:div
+                         class="cardContainer graph-node"
+                         [ngClass]="{'question': node.data.type === 'question',
+                                     'answer': node.data.type === 'answer',
+                                     'end': node.data.type === 'end',
+                                     'selected': node.data.selected === true}"
+                         xmlns="http://www.w3.org/1999/xhtml">
+                <label class="name">{{ node.label }}</label>
+              </xhtml:div>
+            </svg:foreignObject>
+          </svg:g>
+        </ng-template>
+
+      </ngx-graph>
+    </div>
+  </div>
 </div>
+
