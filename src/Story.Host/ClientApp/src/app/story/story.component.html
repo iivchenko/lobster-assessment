@@ -30,7 +30,7 @@
     </div>
   </div>
   <div>
-    <h4 *ngIf="!treeIsBuild">Wana see more? <button type="button" class="btn btn-primary" (click)="buildTree()">Click!</button></h4>
+    <h4 class="mt-3" *ngIf="!treeIsBuild">Wana see more? <button type="button" class="btn btn-primary" (click)="buildTree()">Click!</button></h4>
     <div *ngIf="treeIsBuild">
       <ngx-graph class="chart-container card"
                  [view]="[1000, 1000]"

@@ -22,7 +22,7 @@ import { StoryComponent } from './story/story.compenent'
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: StoryListComponent, pathMatch: 'full' },
-      { path: 'story/:id', component: StoryComponent },
+      { path: 'story/:id', component: StoryComponent }
     ]),
     BrowserAnimationsModule,
     NgxGraphModule
