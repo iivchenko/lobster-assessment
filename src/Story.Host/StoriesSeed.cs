@@ -22,7 +22,7 @@ namespace Story.Host
                 if (!stories.Any())
                 {
                     repository.Update(CreateDoughnutHuntStory()).GetAwaiter().GetResult();
-                    repository.Update(CreateStory1()).GetAwaiter().GetResult();
+                    repository.Update(CreateCoffeeStory()).GetAwaiter().GetResult();
                 }
             }
         }
@@ -90,28 +90,106 @@ namespace Story.Host
                     )
                 );
         }
-        private static AStory CreateStory1()
+        private static AStory CreateCoffeeStory()
         {
             return new AStory
                 (
                     Guid.NewGuid(),
-                    "Test Story",
-                    "This is the story of.. some ones life",
+                    "What about morning Coffee",
+                    "This simple guide will help you in the morning while your brain still sleep to choose a proper good coffee drink.",
                     CreateQuestion
                     (
-                        "Are you hungry?",
+                        "Good morning! What about strong coffee?",
                         CreateAnswer
                         (
-                            "Yes",
+                            "Lets have something less strong",
                             CreateQuestion
                             (
-                                "Are you sure?",
-                                CreateAnswer("Yes", "Then eat something."),
-                                CreateAnswer("No", "So go and do some job.")
+                                "Any milk?",
+                                CreateAnswer
+                                (
+                                    "Of course",
+                                    CreateQuestion
+                                    (
+                                        "Or may be even more milk?",
+                                        CreateAnswer
+                                        (
+                                            "More is better",
+                                            "For today my suggestion for you is Latte. Have a nice drink =)"
+                                        ),
+                                        CreateAnswer
+                                        (
+                                            "No not today",
+                                            "For today my suggestion for you is Cappuccino. Have a nice drink =)"
+                                        )
+                                    )
+                                ),
+                                CreateAnswer
+                                (
+                                    "Am... no... definitely no",
+                                    CreateQuestion
+                                    (
+                                        "Hm... may be some water?",
+                                        CreateAnswer
+                                        (
+                                            "Ho... lets add some water",
+                                             "For today my suggestion for you is Americano. Have a nice drink =)"
+                                        ),
+                                        CreateAnswer
+                                        (
+                                            "Pff... no... definitely no",
+                                            "For today my suggestion for you is Black Coffee. Have a nice drink =)"
+                                        )
+                                    )
+                                )
                             )
                         ),
-                        CreateAnswer("No", "So go and do some job.")
-                ));
+                         CreateAnswer
+                        (
+                            "Oh yes please!",
+                            CreateQuestion
+                            (
+                                "Some milk?",
+                                CreateAnswer
+                                (
+                                    "Nope, just coffee",
+                                    CreateQuestion
+                                    (
+                                        "A bigger cup or smaller?",
+                                        CreateAnswer
+                                        (
+                                            "Just little",
+                                            "For today my suggestion for you is Ristretto. Have a nice drink =)"
+                                        ),
+                                        CreateAnswer
+                                        (
+                                            "Give me more",
+                                            "For today my suggestion for you is Espresso. Have a nice drink =)"
+                                        )
+                                    )
+                                ),
+                                CreateAnswer
+                                (
+                                    "Yeah why not",
+                                    CreateQuestion
+                                    (
+                                        "Or may be foam?",
+                                        CreateAnswer
+                                        (
+                                            "No no just milk",
+                                            "For today my suggestion for you is Flat White. Have a nice drink =)"
+                                        ),
+                                        CreateAnswer
+                                        (
+                                            "Hm.. why not",
+                                            "For today my suggestion for you is Espresso Machiato. Have a nice drink =)"
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                );
         }
 
         private static Question CreateQuestion(string text, params Answer[] answers)
