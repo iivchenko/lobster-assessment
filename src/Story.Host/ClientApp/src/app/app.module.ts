@@ -7,13 +7,13 @@ import { RouterModule } from '@angular/router';
 import { NgxGraphModule } from '@swimlane/ngx-graph'
 
 import { AppComponent } from './app.component';
-import { StoryListComponent } from './story-list/story-list.compenent'
+import { PollListComponent } from './poll-list/poll-list.compenent'
 import { StoryComponent } from './story/story.compenent'
 
 @NgModule({
   declarations: [
     AppComponent,
-    StoryListComponent,
+    PollListComponent,
     StoryComponent
   ],
   imports: [
@@ -21,8 +21,8 @@ import { StoryComponent } from './story/story.compenent'
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: StoryListComponent, pathMatch: 'full' },
-      { path: 'story/:id', component: StoryComponent }
+      { path: '', component: PollListComponent, pathMatch: 'full' },
+      { path: 'poll/:id', component: StoryComponent }
     ]),
     BrowserAnimationsModule,
     NgxGraphModule

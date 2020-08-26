@@ -2,20 +2,20 @@ import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'story-list-component',
-  templateUrl: './story-list.component.html'
+  selector: 'poll-list-component',
+  templateUrl: './poll-list.component.html'
 })
-export class StoryListComponent {
-  public stories: StorySummary[];
+export class PollListComponent {
+  public polls: PollSummary[];
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    http.get<StorySummary[]>(baseUrl + 'api/stories').subscribe(result => {
-      this.stories = result;
+    http.get<PollSummary[]>(baseUrl + 'api/polls').subscribe(result => {
+      this.polls = result;
     }, error => console.error(error));
   }
 }
 
-interface StorySummary {
+interface PollSummary {
   id: string;
   name: string;
   desciption: string;
