@@ -7,8 +7,16 @@ namespace Story.Application.Domain.Polls
     {
         internal PollItem(Guid id, string text)
         {
-            // check id not empty 
-            // check text not empty
+            if (id == Guid.Empty)
+            {
+                throw new DomainException($"'{nameof(id)}' can't be empty!");
+            }
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new DomainException($"'{nameof(text)}' can't be empty!");
+            }
+
             Id = id;
             Text = text;
         }
