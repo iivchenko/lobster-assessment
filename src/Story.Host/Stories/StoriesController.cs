@@ -5,7 +5,6 @@ using Story.Application.Queries.GetAnswer;
 using Story.Application.Queries.GetEnd;
 using Story.Application.Queries.GetFullStory;
 using Story.Application.Queries.GetQuestion;
-using Story.Application.Queries.GetStory;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,14 +22,6 @@ namespace Story.Host.Stories
         {
             _mediator = mediator;
             _mapper = mapper;
-        }
-
-        [HttpGet("{id}")]
-        public async Task<StoryViewModel> Story(Guid id)
-        {
-            var response = await _mediator.Send(new GetStoryQuery { Id = id } );
-
-            return _mapper.Map<StoryViewModel>(response);
         }
 
         [HttpGet("{id}/full")]

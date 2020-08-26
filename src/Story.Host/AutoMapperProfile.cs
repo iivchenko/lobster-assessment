@@ -5,9 +5,9 @@ using Story.Application.Domain.Stories.Abstractions;
 using Story.Application.Queries.GetAnswer;
 using Story.Application.Queries.GetEnd;
 using Story.Application.Queries.GetFullStory;
+using Story.Application.Queries.GetPoll;
 using Story.Application.Queries.GetPolls;
 using Story.Application.Queries.GetQuestion;
-using Story.Application.Queries.GetStory;
 using Story.Host.Polls;
 using Story.Host.Stories;
 using AStory = Story.Application.Domain.Stories.Story;
@@ -21,9 +21,9 @@ namespace Story.Host
             CreateMap<Poll, GetPollsQueryPollSummary>();
             CreateMap<GetPollsQueryPollSummary, PollSummaryViewModel>();
 
-            CreateMap<AStory, GetStoryQueryResponse>()
-                .ForMember(dest => dest.RootQuestionId, opt => opt.MapFrom(src => src.Root.Id));
-            CreateMap<GetStoryQueryResponse, StoryViewModel>();
+            CreateMap<Poll, GetPollQueryResponse>()
+                .ForMember(dest => dest.RootQuestionId, opt => opt.MapFrom(src => src.RootQuestion.Id));
+            CreateMap<GetPollQueryResponse, PollViewModel>();
 
             CreateMap<Question, GetQuestionQueryResponse>()
                 .ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Nodes));

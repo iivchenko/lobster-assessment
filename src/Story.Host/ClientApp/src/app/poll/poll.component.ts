@@ -5,12 +5,12 @@ import { Edge, Node } from '@swimlane/ngx-graph';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'story-component',
-  styleUrls: ['./story.component.css'],
-  templateUrl: './story.component.html'
+  selector: 'poll-component',
+  styleUrls: ['./poll.component.css'],
+  templateUrl: './poll.component.html'
 })
-export class StoryComponent {
-  public story: Story = { id: null, name: null, description: null, rootQuestionId: null };;
+export class PollComponent {
+  public poll: Poll = { id: null, name: null, description: null, rootQuestionId: null };;
   public question: Question = { id: null, text: null, answers: [] };
   public end: End = { id: null, message: null };
   public finish: boolean;
@@ -37,12 +37,12 @@ export class StoryComponent {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
 
-    this.http.get<Story>(this.baseUrl + 'api/stories/' + id).subscribe(result => {
-      this.story = result;
+    this.http.get<Poll>(this.baseUrl + 'api/polls/' + id).subscribe(result => {
+      this.poll = result;
 
-      this.pushHistory(this.story.id, this.story.name, 1);
+      this.pushHistory(this.poll.id, this.poll.name, 1);
 
-      this.http.get<Question>(this.baseUrl + 'api/stories/' + id + '/questions/' + this.story.rootQuestionId).subscribe(result => {
+      this.http.get<Question>(this.baseUrl + 'api/polls/' + id + '/questions/' + this.poll.rootQuestionId).subscribe(result => {
         this.question = result;
 
         this.pushHistory(this.question.id, this.question.text, 2);
@@ -53,12 +53,12 @@ export class StoryComponent {
   }
 
   giveAnswer(id: string) {
-    this.http.get<Answer>(this.baseUrl + 'api/stories/' + this.story.id + '/answers/' + id).subscribe(result => {
+    this.http.get<Answer>(this.baseUrl + 'api/polls/' + this.poll.id + '/answers/' + id).subscribe(result => {
 
       this.pushHistory(result.id, result.text, 3);
 
       if (result.nextEntityType === 0) {
-        this.http.get<Question>(this.baseUrl + 'api/stories/' + this.story.id + '/questions/' + result.nextEntityId).subscribe(result => {
+        this.http.get<Question>(this.baseUrl + 'api/polls/' + this.poll.id + '/questions/' + result.nextEntityId).subscribe(result => {
           this.question = result;
 
           this.pushHistory(this.question.id, this.question.text, 2);
@@ -66,7 +66,7 @@ export class StoryComponent {
         }, error => console.error(error));
       }
       else {
-        this.http.get<End>(this.baseUrl + 'api/stories/' + this.story.id + '/end/' + result.nextEntityId).subscribe(result => {
+        this.http.get<End>(this.baseUrl + 'api/polls/' + this.poll.id + '/end/' + result.nextEntityId).subscribe(result => {
           this.end = result;
 
           this.pushHistory(this.end.id, this.end.message, 4);
@@ -88,7 +88,7 @@ export class StoryComponent {
   }
 
   buildTree() {
-    this.http.get<FullStory>(this.baseUrl + 'api/stories/' + this.story.id + '/full').subscribe(result => {
+    this.http.get<FullPoll>(this.baseUrl + 'api/polls/' + this.poll.id + '/full').subscribe(result => {
       this.handleQuestion(result.root);
       this.treeIsBuild = true;
       this.center$.next(true);
@@ -171,7 +171,7 @@ export class StoryComponent {
   }  
 }
 
-interface Story {
+interface Poll {
   id: string;
   name: string;
   description: string;
@@ -220,7 +220,7 @@ interface FullQuestion {
   answers: FullAnswer[]
 }
 
-interface FullStory {
+interface FullPoll {
   id: string;
   name: string;
   root: FullQuestion;

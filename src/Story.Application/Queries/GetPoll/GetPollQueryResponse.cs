@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Story.Application.Queries.GetStory
+namespace Story.Application.Queries.GetPoll
 {
-    public sealed class GetStoryQueryResponse
+    public sealed class GetPollQueryResponse
     {
         public Guid Id { get; set; }
 

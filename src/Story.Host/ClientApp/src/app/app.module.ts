@@ -7,14 +7,14 @@ import { RouterModule } from '@angular/router';
 import { NgxGraphModule } from '@swimlane/ngx-graph'
 
 import { AppComponent } from './app.component';
-import { PollListComponent } from './poll-list/poll-list.compenent'
-import { StoryComponent } from './story/story.compenent'
+import { PollListComponent } from './poll-list/poll-list.component'
+import { PollComponent } from './poll/poll.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     PollListComponent,
-    StoryComponent
+    PollComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -22,7 +22,7 @@ import { StoryComponent } from './story/story.compenent'
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: PollListComponent, pathMatch: 'full' },
-      { path: 'poll/:id', component: StoryComponent }
+      { path: 'poll/:id', component: PollComponent }
     ]),
     BrowserAnimationsModule,
     NgxGraphModule

@@ -3,19 +3,18 @@ using Moq;
 using NUnit.Framework;
 using Story.Application.Domain.Common;
 using Story.Application.Domain.Polls;
-using Story.Application.Queries.GetPolls;
+using Story.Application.Queries;
+using Story.Application.Queries.GetPoll;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Questionnaire.Application.Tests.Queries.GetPolls
+namespace Story.Application.Tests.Queries.GetPoll
 {
     [TestFixture]
-    public sealed class GetPollsQueryHandlerTests
+    public sealed class GetPollQueryHandlerTests
     {
-        private GetPollsQueryHandler _handler;
+        private GetPollQueryHandler _handler;
         private Mock<IRepository<Poll, Guid>> _pollRepository;
         private Mock<IMapper> _mapper;
 
@@ -25,64 +24,62 @@ namespace Questionnaire.Application.Tests.Queries.GetPolls
             _pollRepository = new Mock<IRepository<Poll, Guid>>();
             _mapper = new Mock<IMapper>();
 
-            _handler = new GetPollsQueryHandler(_pollRepository.Object, _mapper.Object);
+            _handler = new GetPollQueryHandler(_pollRepository.Object, _mapper.Object);
         }
 
         [Test]
-        public async Task Handle_NoPollsInTheStorage_ReturnEmpty()
+        public void Handle_NoPollInTheStorage_Throws()
         {
             // Arrange
-            var query = new GetPollsQuery();
-
-            _pollRepository
-                .Setup(x => x.ReadAll(-1, -1))
-                .ReturnsAsync(Enumerable.Empty<Poll>());
-
-            _mapper
-                .Setup(x => x.Map<GetPollsQueryPollSummary>(It.IsAny<Poll>()))
-                .Returns(new GetPollsQueryPollSummary());
-
-            // Act
-            var response = await _handler.Handle(query, CancellationToken.None);
-
-            // Assert
-            Assert.That(response.Polls, Is.Empty);
-        }
-
-        [Test]
-        public async Task Handle_DetailedPollsInTheStorage_ReturnSummary()
-        {
-            // Arrange
-            var query = new GetPollsQuery();
-            var poll1 = CreatePoll();
-            var poll2 = CreatePoll();
-            var polls = new[] { poll1, poll2 };
-
-            var expectedSummaries = new[]
+            var id = Guid.NewGuid();
+            var query = new GetPollQuery
             {
-                new GetPollsQueryPollSummary { Name = "Poll 1 Item" },
-                new GetPollsQueryPollSummary { Name = "Poll 2 Item" }
+                Id = id
             };
 
             _pollRepository
-                .Setup(x => x.ReadCount())
-                .ReturnsAsync(2); 
+                .Setup(x => x.Read(id))
+                .ReturnsAsync((Poll)null);
+
+            // Act+Assert
+            Assert.That(
+                async () => await _handler.Handle(query, CancellationToken.None),
+                Throws
+                    .InstanceOf<EntityNotFoundException>()
+                    .With
+                    .Property(nameof(EntityNotFoundException.Id))
+                    .EqualTo(id)
+                    .And
+                    .Property(nameof(EntityNotFoundException.Type))
+                    .EqualTo(nameof(Poll)));
+        }
+
+        [Test]
+        public async Task Handle_PollInTheStorage_Returns()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var query = new GetPollQuery
+            {
+                Id = id
+            };
+
+            var poll = CreatePoll();
+            var expectedRsponse = new GetPollQueryResponse();
 
             _pollRepository
-                .Setup(x => x.ReadAll(0, 2))
-                .ReturnsAsync(new[] { poll1, poll2 });
+                .Setup(x => x.Read(id))
+                .ReturnsAsync(poll);
 
             _mapper
-                .Setup(x => x.Map<IEnumerable<GetPollsQueryPollSummary>>(polls))
-                .Returns(expectedSummaries);
+                .Setup(x => x.Map<GetPollQueryResponse>(poll))
+                .Returns(expectedRsponse);
 
             // Act
             var response = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.That(response.Polls.Count(), Is.EqualTo(2));
-            Assert.That(response.Polls.ElementAt(0).Name, Is.EqualTo("Poll 1 Item"));
-            Assert.That(response.Polls.ElementAt(1).Name, Is.EqualTo("Poll 2 Item"));
+            Assert.That(response, Is.EqualTo(expectedRsponse));
         }
 
         private static Poll CreatePoll()

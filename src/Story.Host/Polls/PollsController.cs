@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Story.Application.Queries.GetPoll;
 using Story.Application.Queries.GetPolls;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,26 @@ namespace Story.Host.Polls
             var response = await _mediator.Send(new GetPollsQuery());
 
             return _mapper.Map<IEnumerable<PollSummaryViewModel>>(response.Polls);
-        }     
+        }
+
+        [HttpGet("{id}")]
+        public async Task<PollViewModel> GetPoll(Guid id)
+        {
+            var response = await _mediator.Send(new GetPollQuery { Id = id });
+
+            return _mapper.Map<PollViewModel>(response);
+        }
+    }
+
+    public sealed class PollViewModel
+    {
+        public Guid Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public Guid RootQuestionId { get; set; }
     }
 
     public sealed class PollSummaryViewModel
