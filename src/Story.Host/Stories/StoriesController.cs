@@ -5,7 +5,6 @@ using Story.Application.Queries.GetAnswer;
 using Story.Application.Queries.GetEnd;
 using Story.Application.Queries.GetFullStory;
 using Story.Application.Queries.GetQuestion;
-using Story.Application.Queries.GetStories;
 using Story.Application.Queries.GetStory;
 using System;
 using System.Collections.Generic;
@@ -15,23 +14,15 @@ namespace Story.Host.Stories
 {
     [Route("api/stories")]
     [ApiController]
-    public sealed class StoriesController : ControllerBase
+    public sealed class PollsController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
-        public StoriesController(IMediator mediator, IMapper mapper)
+        public PollsController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;
-        }
-
-        [HttpGet]
-        public async Task<IEnumerable<StorySummaryViewModel>> Stories()
-        {
-            var response = await _mediator.Send(new GetStoriesQuery());
-
-            return _mapper.Map<IEnumerable<StorySummaryViewModel>>(response.Stories);
         }
 
         [HttpGet("{id}")]

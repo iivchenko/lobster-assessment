@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
+using Story.Application.Domain.Polls;
 using Story.Application.Domain.Stories;
 using Story.Application.Domain.Stories.Abstractions;
 using Story.Application.Queries.GetAnswer;
 using Story.Application.Queries.GetEnd;
 using Story.Application.Queries.GetFullStory;
+using Story.Application.Queries.GetPolls;
 using Story.Application.Queries.GetQuestion;
-using Story.Application.Queries.GetStories;
 using Story.Application.Queries.GetStory;
+using Story.Host.Polls;
 using Story.Host.Stories;
 using AStory = Story.Application.Domain.Stories.Story;
 
@@ -16,8 +18,8 @@ namespace Story.Host
     {
         public AutoMapperProfile()
         {
-            CreateMap<AStory, GetStoryQueryStorySummary>();
-            CreateMap<GetStoryQueryStorySummary, StorySummaryViewModel>();
+            CreateMap<Poll, GetPollsQueryPollSummary>();
+            CreateMap<GetPollsQueryPollSummary, PollSummaryViewModel>();
 
             CreateMap<AStory, GetStoryQueryResponse>()
                 .ForMember(dest => dest.RootQuestionId, opt => opt.MapFrom(src => src.Root.Id));
