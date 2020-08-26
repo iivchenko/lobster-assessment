@@ -8,7 +8,7 @@ namespace Story.Application.Domain.Polls
 {
     public sealed class Poll : IAggregateRoot<Guid>
     {
-        public Poll(Guid id, string name, string description, PollQuestion rootQuestion, IEnumerable<PollItem> items, IEnumerable<Transition> transitions)
+        public Poll(Guid id, string name, string description, Question rootQuestion, IEnumerable<PollItem> items, IEnumerable<Transition> transitions)
         {
             if (id == Guid.Empty)
             {
@@ -51,10 +51,10 @@ namespace Story.Application.Domain.Polls
             {
                 switch(item)
                 {
-                    case PollQuestion question:
+                    case Question question:
                         ValidateQuestionTransition(question.Id, items, transitions);
                         break;
-                    case PollAnswer answer:
+                    case Answer answer:
                         ValidateAnswerTransition(answer.Id, items, transitions);
                         break;
                 }
@@ -75,13 +75,13 @@ namespace Story.Application.Domain.Polls
 
         public string Description { get; private set; }
 
-        public PollQuestion RootQuestion { get; private set; }
+        public Question RootQuestion { get; private set; }
 
         public IEnumerable<PollItem> Items { get; private set; }
 
         public IEnumerable<Transition> Transitions { get; private set; }
 
-        public IEnumerable<PollAnswer> FindNextFor(PollQuestion question)
+        public IEnumerable<Answer> FindNextFor(Question question)
         {
             if (question == null)
             {
@@ -98,10 +98,10 @@ namespace Story.Application.Domain.Polls
                     .Where(x => x.FromId == question.Id)
                     .Select(x => x.ToId);
 
-            return Items.Where(x => nextItemIds.Contains(x.Id)).Cast<PollAnswer>();
+            return Items.Where(x => nextItemIds.Contains(x.Id)).Cast<Answer>();
         }
 
-        public PollItem FindNextFor(PollAnswer answer)
+        public PollItem FindNextFor(Answer answer)
         {
             if (answer == null)
             {

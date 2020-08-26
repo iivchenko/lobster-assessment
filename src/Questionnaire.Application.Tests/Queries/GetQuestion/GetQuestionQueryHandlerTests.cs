@@ -70,9 +70,9 @@ namespace Questionnaire.Application.Tests.Queries.GetQuestion
                 QuestionId = questionId
             };
 
-            var question = new PollQuestion(Guid.NewGuid(), "How are you doing?");
-            var answer = new PollAnswer(Guid.NewGuid(), "Good");
-            var end = new PollEnd(Guid.NewGuid(), "Good for you!");
+            var question = new Question(Guid.NewGuid(), "How are you doing?");
+            var answer = new Answer(Guid.NewGuid(), "Good");
+            var end = new End(Guid.NewGuid(), "Good for you!");
 
             var items = new PollItem[] { question, answer, end };
             var transitions = new[]
@@ -106,7 +106,7 @@ namespace Questionnaire.Application.Tests.Queries.GetQuestion
                     .EqualTo(questionId)
                     .And
                     .Property(nameof(EntityNotFoundException.Type))
-                    .EqualTo(nameof(PollQuestion)));
+                    .EqualTo(nameof(Question)));
         }
 
         [Test]
@@ -122,9 +122,9 @@ namespace Questionnaire.Application.Tests.Queries.GetQuestion
                 QuestionId = questionId
             };
 
-            var question = new PollQuestion(questionId, "How are you doing?");
-            var answer = new PollAnswer(Guid.NewGuid(), "Good");
-            var end = new PollEnd(Guid.NewGuid(), "Good for you!");
+            var question = new Question(questionId, "How are you doing?");
+            var answer = new Answer(Guid.NewGuid(), "Good");
+            var end = new End(Guid.NewGuid(), "Good for you!");
 
             var items = new PollItem[] { question, answer, end };
             var transitions = new[]

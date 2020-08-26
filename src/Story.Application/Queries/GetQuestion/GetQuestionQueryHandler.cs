@@ -32,9 +32,9 @@ namespace Story.Application.Queries.GetQuestion
                 throw new EntityNotFoundException(query.PollId, nameof(Poll));
             }
 
-            if (!(poll.Items.SingleOrDefault(x => x.Id == query.QuestionId) is PollQuestion question))
+            if (!(poll.Items.SingleOrDefault(x => x.Id == query.QuestionId) is Question question))
             {
-                throw new EntityNotFoundException(query.QuestionId, nameof(PollQuestion));
+                throw new EntityNotFoundException(query.QuestionId, nameof(Question));
             }
 
             var answers = poll.FindNextFor(question);

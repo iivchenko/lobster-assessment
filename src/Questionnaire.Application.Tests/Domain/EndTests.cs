@@ -16,7 +16,7 @@ namespace Questionnaire.Application.Tests.Domain
             // Arrange+Act+Assert
             Assert
                 .That(
-                    () => new PollEnd(Guid.Empty, ProperText),
+                    () => new End(Guid.Empty, ProperText),
                     Throws
                         .Exception
                         .InstanceOf<DomainException>()
@@ -31,7 +31,7 @@ namespace Questionnaire.Application.Tests.Domain
             // Arrange+Act+Assert
             Assert
                 .That(
-                    () => new PollEnd(Guid.NewGuid(), null),
+                    () => new End(Guid.NewGuid(), null),
                     Throws
                         .Exception
                         .InstanceOf<DomainException>()
@@ -46,7 +46,7 @@ namespace Questionnaire.Application.Tests.Domain
             // Arrange+Act+Assert
             Assert
                 .That(
-                    () => new PollEnd(Guid.NewGuid(), string.Empty),
+                    () => new End(Guid.NewGuid(), string.Empty),
                     Throws
                         .Exception
                         .InstanceOf<DomainException>()
@@ -62,7 +62,7 @@ namespace Questionnaire.Application.Tests.Domain
             var id = Guid.NewGuid();
 
             // Assert
-            var end = new PollEnd(id, ProperText);
+            var end = new End(id, ProperText);
 
             // Act
             Assert.That(end.Id, Is.EqualTo(id));

@@ -84,11 +84,11 @@ namespace Story.Application.Tests.Queries.GetPoll
 
         private static Poll CreatePoll()
         {
-            var question = new PollQuestion(Guid.NewGuid(), "How are you doing?");
-            var answer1 = new PollAnswer(Guid.NewGuid(), "Good");
-            var answer2 = new PollAnswer(Guid.NewGuid(), "Bad");
-            var end1 = new PollEnd(Guid.NewGuid(), "Good for you!");
-            var end2 = new PollEnd(Guid.NewGuid(), "There there");
+            var question = new Question(Guid.NewGuid(), "How are you doing?");
+            var answer1 = new Answer(Guid.NewGuid(), "Good");
+            var answer2 = new Answer(Guid.NewGuid(), "Bad");
+            var end1 = new End(Guid.NewGuid(), "Good for you!");
+            var end2 = new End(Guid.NewGuid(), "There there");
 
             var items = new PollItem[] { question, answer1, answer2, end1, end2 };
             var transitions = new[]

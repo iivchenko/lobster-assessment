@@ -73,7 +73,7 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_EmptyItems_Throws()
         {
             // Arrange
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
 
             // Act+Assert
             Assert
@@ -90,8 +90,8 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_EmptyTransitions_Throws()
         {
             // Arrange 
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
-            var items = new PollItem [] { rootQuestion, new PollEnd(Guid.NewGuid(), ProperText) };
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
+            var items = new PollItem [] { rootQuestion, new End(Guid.NewGuid(), ProperText) };
 
             // Act+Assert
             Assert
@@ -108,9 +108,9 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_RootQuestionIdNotPresentInItems_Throws()
         {
             // Arrange           
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
-            var question = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);            
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
+            var question = new Question(Guid.NewGuid(), ProperText);
+            var answer = new Answer(Guid.NewGuid(), ProperText);            
             var items = new PollItem [] { question, answer };
             var transitions = new[] { Transition.Create(answer, question) };
 
@@ -129,9 +129,9 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_RootQuestionNotPresentInTransitionis_Throws()
         {
             // Arrange           
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
-            var question = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
+            var question = new Question(Guid.NewGuid(), ProperText);
+            var answer = new Answer(Guid.NewGuid(), ProperText);
             var items = new PollItem[] { rootQuestion, question, answer };
             var transitions = new[] { Transition.Create(answer, question) };
 
@@ -150,9 +150,9 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_QuestionNotPresentInTransitions_Throws()
         {
             // Arrange           
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
-            var question = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
+            var question = new Question(Guid.NewGuid(), ProperText);
+            var answer = new Answer(Guid.NewGuid(), ProperText);
             var items = new PollItem[] { rootQuestion, question, answer };
             var transitions = new[] { Transition.Create(rootQuestion, answer) };
 
@@ -171,8 +171,8 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_AnswerNotPresentInTransitions_Throws()
         {
             // Arrange           
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
+            var answer = new Answer(Guid.NewGuid(), ProperText);
             var items = new PollItem[] { rootQuestion, answer };
             var transitions = new[] { Transition.Create(rootQuestion, answer) };
 
@@ -191,9 +191,9 @@ namespace Questionnaire.Application.Tests.Domain
         public void FindNextFor_Question_QuestionIsNull_Throws()
         {
             // Arrange           
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
-            var end = new PollEnd(Guid.NewGuid(), ProperText);
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
+            var answer = new Answer(Guid.NewGuid(), ProperText);
+            var end = new End(Guid.NewGuid(), ProperText);
 
             var items = new PollItem[] { rootQuestion, answer, end };
             var transitions = new[] { Transition.Create(rootQuestion, answer), Transition.Create(answer, end) };
@@ -203,7 +203,7 @@ namespace Questionnaire.Application.Tests.Domain
             // Act+Assert
             Assert
                 .That(
-                    () => poll.FindNextFor((PollQuestion)null),
+                    () => poll.FindNextFor((Question)null),
                     Throws
                         .InstanceOf<DomainException>()
                         .With
@@ -215,11 +215,11 @@ namespace Questionnaire.Application.Tests.Domain
         public void FindNextFor_Question_QuestionIsNotPresentInPoll_Throws()
         {
             // Arrange           
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
-            var end = new PollEnd(Guid.NewGuid(), ProperText);
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
+            var answer = new Answer(Guid.NewGuid(), ProperText);
+            var end = new End(Guid.NewGuid(), ProperText);
 
-            var fakeQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
+            var fakeQuestion = new Question(Guid.NewGuid(), ProperText);
 
             var items = new PollItem[] { rootQuestion, answer, end };
             var transitions = new[] { Transition.Create(rootQuestion, answer), Transition.Create(answer, end) };
@@ -241,10 +241,10 @@ namespace Questionnaire.Application.Tests.Domain
         public void FindNextFor_Question_AllConditionsAreMet_ReturnAnswers()
         {
             // Arrange           
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer1 = new PollAnswer(Guid.NewGuid(), ProperText);
-            var answer2 = new PollAnswer(Guid.NewGuid(), ProperText);
-            var end = new PollEnd(Guid.NewGuid(), ProperText);
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
+            var answer1 = new Answer(Guid.NewGuid(), ProperText);
+            var answer2 = new Answer(Guid.NewGuid(), ProperText);
+            var end = new End(Guid.NewGuid(), ProperText);
 
             var items = new PollItem[] { rootQuestion, answer1, answer2, end };
             var transitions = new[] 
@@ -270,9 +270,9 @@ namespace Questionnaire.Application.Tests.Domain
         public void FindNextFor_Answer_AnsswerIsNull_Throws()
         {
             // Arrange           
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
-            var end = new PollEnd(Guid.NewGuid(), ProperText);
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
+            var answer = new Answer(Guid.NewGuid(), ProperText);
+            var end = new End(Guid.NewGuid(), ProperText);
 
             var items = new PollItem[] { rootQuestion, answer, end };
             var transitions = new[] { Transition.Create(rootQuestion, answer), Transition.Create(answer, end) };
@@ -282,7 +282,7 @@ namespace Questionnaire.Application.Tests.Domain
             // Act+Assert
             Assert
                 .That(
-                    () => poll.FindNextFor((PollAnswer)null),
+                    () => poll.FindNextFor((Answer)null),
                     Throws
                         .InstanceOf<DomainException>()
                         .With
@@ -294,11 +294,11 @@ namespace Questionnaire.Application.Tests.Domain
         public void FindNextFor_Answer_AnswerIsNotPresentInPoll_Throws()
         {
             // Arrange           
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
-            var end = new PollEnd(Guid.NewGuid(), ProperText);
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
+            var answer = new Answer(Guid.NewGuid(), ProperText);
+            var end = new End(Guid.NewGuid(), ProperText);
 
-            var fakeAnswer = new PollAnswer(Guid.NewGuid(), ProperText);
+            var fakeAnswer = new Answer(Guid.NewGuid(), ProperText);
 
             var items = new PollItem[] { rootQuestion, answer, end };
             var transitions = new[] { Transition.Create(rootQuestion, answer), Transition.Create(answer, end) };
@@ -320,9 +320,9 @@ namespace Questionnaire.Application.Tests.Domain
         public void FindNextFor_Answer_AllConditionsAreMet_ReturnEnd()
         {
             // Arrange           
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
-            var end = new PollEnd(Guid.NewGuid(), ProperText);
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
+            var answer = new Answer(Guid.NewGuid(), ProperText);
+            var end = new End(Guid.NewGuid(), ProperText);
 
             var items = new PollItem[] { rootQuestion, answer, end };
             var transitions = new[]
@@ -344,11 +344,11 @@ namespace Questionnaire.Application.Tests.Domain
         public void FindNextFor_Answer_AllConditionsAreMet_ReturnQuestion()
         {
             // Arrange           
-            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer1 = new PollAnswer(Guid.NewGuid(), ProperText);
-            var question = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer2 = new PollAnswer(Guid.NewGuid(), ProperText);
-            var end = new PollEnd(Guid.NewGuid(), ProperText);
+            var rootQuestion = new Question(Guid.NewGuid(), ProperText);
+            var answer1 = new Answer(Guid.NewGuid(), ProperText);
+            var question = new Question(Guid.NewGuid(), ProperText);
+            var answer2 = new Answer(Guid.NewGuid(), ProperText);
+            var end = new End(Guid.NewGuid(), ProperText);
 
             var items = new PollItem[] { rootQuestion, answer1, question, answer2, end };
             var transitions = new[]

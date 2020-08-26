@@ -31,9 +31,9 @@ namespace Story.Application.Queries.GetAnswer
                 throw new EntityNotFoundException(query.PollId, nameof(Poll));
             }
 
-            if (!(poll.Items.SingleOrDefault(x => x.Id == query.AnswerId) is PollAnswer answer))
+            if (!(poll.Items.SingleOrDefault(x => x.Id == query.AnswerId) is Answer answer))
             {
-                throw new EntityNotFoundException(query.AnswerId, nameof(PollAnswer));
+                throw new EntityNotFoundException(query.AnswerId, nameof(Answer));
             }
 
             var next = poll.FindNextFor(answer);

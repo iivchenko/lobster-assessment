@@ -2,9 +2,9 @@
 
 namespace Story.Application.Domain.Polls
 {
-    public sealed class PollEnd : PollItem
+    public sealed class Answer : PollItem
     {
-        public PollEnd(Guid id, string text)
+        public Answer(Guid id, string text) 
             : base(id, text)
         {
         }

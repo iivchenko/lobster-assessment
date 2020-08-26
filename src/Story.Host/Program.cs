@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
 
 namespace Story.Host
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
 
-            StoriesSeed.Seed(host);
-            PollsSeed.Seed(host).Wait();
+            await PollsSeed.Seed(host);
 
             host.Run();
         }

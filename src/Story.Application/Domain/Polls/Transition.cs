@@ -20,7 +20,7 @@ namespace Story.Application.Domain.Polls
 
         public Guid ToId { get; private set; }
 
-        public static Transition Create(PollQuestion from, PollAnswer to)
+        public static Transition Create(Question from, Answer to)
         {
             if (from == null)
             {
@@ -35,7 +35,7 @@ namespace Story.Application.Domain.Polls
             return new Transition(Guid.NewGuid(), from.Id, to.Id);
         }
 
-        public static Transition Create(PollAnswer from, PollQuestion to)
+        public static Transition Create(Answer from, Question to)
         {
             if (from == null)
             {
@@ -50,7 +50,7 @@ namespace Story.Application.Domain.Polls
             return new Transition(Guid.NewGuid(), from.Id, to.Id);
         }
 
-        public static Transition Create(PollAnswer from, PollEnd to)
+        public static Transition Create(Answer from, End to)
         {
             if (from == null)
             {

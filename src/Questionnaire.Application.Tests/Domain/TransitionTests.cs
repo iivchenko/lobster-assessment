@@ -14,8 +14,8 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_FromQuestionToAnswer_EmptyQuestion_Throws()
         {
             // Arrange
-            var question = (PollQuestion)null;
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
+            var question = (Question)null;
+            var answer = new Answer(Guid.NewGuid(), ProperText);
 
             // Act + Assert
             Assert
@@ -32,8 +32,8 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_FromQuestionToAnswer_EmptyAnswer_Throws()
         {
             // Arrange
-            var question = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer = (PollAnswer)null;
+            var question = new Question(Guid.NewGuid(), ProperText);
+            var answer = (Answer)null;
 
             // Act + Assert
             Assert
@@ -50,8 +50,8 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_FromAnswerToQuestion_EmptyQuestion_Throws()
         {
             // Arrange
-            var question = (PollQuestion)null;
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
+            var question = (Question)null;
+            var answer = new Answer(Guid.NewGuid(), ProperText);
 
             // Act + Assert
             Assert
@@ -68,8 +68,8 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_FromAnswerToQuestion_EmptyAnswer_Throws()
         {
             // Arrange
-            var question = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer = (PollAnswer)null;
+            var question = new Question(Guid.NewGuid(), ProperText);
+            var answer = (Answer)null;
 
             // Act + Assert
             Assert
@@ -86,8 +86,8 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_FromAnswerToEnd_EmptyEnd_Throws()
         {
             // Arrange
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
-            var end = (PollEnd)null;
+            var answer = new Answer(Guid.NewGuid(), ProperText);
+            var end = (End)null;
 
             // Act + Assert
             Assert
@@ -104,8 +104,8 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_FromAnswerToEnd_EmptyAnswer_Throws()
         {
             // Arrange
-            var answer = (PollAnswer)null;
-            var end = new PollEnd(Guid.NewGuid(), ProperText);
+            var answer = (Answer)null;
+            var end = new End(Guid.NewGuid(), ProperText);
 
             // Act + Assert
             Assert
@@ -122,8 +122,8 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_FromQuestinToAnswer_AllConditionsMet_CreateNewTransition()
         {
             // Arrange
-            var question = new PollQuestion(Guid.NewGuid(), ProperText);
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
+            var question = new Question(Guid.NewGuid(), ProperText);
+            var answer = new Answer(Guid.NewGuid(), ProperText);
 
             // Act
             var transition = Transition.Create(question, answer);
@@ -138,8 +138,8 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_FromAnswerToQuestion_AllConditionsMet_CreateNewTransition()
         {
             // Arrange
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
-            var question = new PollQuestion(Guid.NewGuid(), ProperText);            
+            var answer = new Answer(Guid.NewGuid(), ProperText);
+            var question = new Question(Guid.NewGuid(), ProperText);            
 
             // Act
             var transition = Transition.Create(answer, question);
@@ -154,8 +154,8 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_FromAnswerToEnd_AllConditionsMet_CreateNewTransition()
         {
             // Arrange
-            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
-            var end = new PollEnd(Guid.NewGuid(), ProperText);
+            var answer = new Answer(Guid.NewGuid(), ProperText);
+            var end = new End(Guid.NewGuid(), ProperText);
 
             // Act
             var transition = Transition.Create(answer, end);
