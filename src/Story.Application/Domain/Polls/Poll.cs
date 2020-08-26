@@ -8,10 +8,7 @@ namespace Story.Application.Domain.Polls
 {
     public sealed class Poll : IAggregateRoot<Guid>
     {
-        [JsonProperty] private readonly IEnumerable<PollItem> _items;
-        [JsonProperty] private readonly IEnumerable<Transition> _transitions;
-
-        public Poll(Guid id, string name, string description, Guid rootQuestionId, IEnumerable<PollItem> items, IEnumerable<Transition> transitions)
+        public Poll(Guid id, string name, string description, PollQuestion rootQuestion, IEnumerable<PollItem> items, IEnumerable<Transition> transitions)
         {
             if (id == Guid.Empty)
             {
@@ -28,9 +25,9 @@ namespace Story.Application.Domain.Polls
                 throw new DomainException($"'{nameof(description)}' can't be empty!");
             }
 
-            if (rootQuestionId == Guid.Empty)
+            if (rootQuestion == null || rootQuestion.Id == Guid.Empty)
             {
-                throw new DomainException($"'{nameof(rootQuestionId)}' can't be empty!");
+                throw new DomainException($"'{nameof(rootQuestion)}' can't be empty!");
             }
 
             if (items == null || !items.Any())
@@ -43,12 +40,12 @@ namespace Story.Application.Domain.Polls
                 throw new DomainException($"'{nameof(transitions)}' can't be empty!");
             }
 
-            if (!items.Any(x => x.Id == rootQuestionId))
+            if (!items.Any(x => x.Id == rootQuestion.Id))
             {
-                throw new DomainException($"Root questioin (id: '{rootQuestionId}' is not presetn in items!");
+                throw new DomainException($"Root questioin (id: '{rootQuestion.Id}' is not presetn in items!");
             }
 
-            ValidateQuestionTransition(rootQuestionId, items, transitions);
+            ValidateQuestionTransition(rootQuestion.Id, items, transitions);
 
             foreach(var item in items)
             {
@@ -66,10 +63,10 @@ namespace Story.Application.Domain.Polls
             Id = id;
             Name = name;
             Description = description;
-            RootQuestion = (PollQuestion)items.Single(x => x.Id == rootQuestionId);
+            RootQuestion = rootQuestion;
 
-            _items = items;
-            _transitions = transitions;
+            Items = items;
+            Transitions = transitions;
         }
 
         public Guid Id { get; private set; }
@@ -80,6 +77,10 @@ namespace Story.Application.Domain.Polls
 
         public PollQuestion RootQuestion { get; private set; }
 
+        public IEnumerable<PollItem> Items { get; private set; }
+
+        public IEnumerable<Transition> Transitions { get; private set; }
+
         public IEnumerable<PollAnswer> FindNextFor(PollQuestion question)
         {
             if (question == null)
@@ -87,17 +88,17 @@ namespace Story.Application.Domain.Polls
                 throw new DomainException($"Question should not be null!");
             }
 
-            if (!_items.Any(x => x.Id == question.Id))
+            if (!Items.Any(x => x.Id == question.Id))
             {
                 throw new DomainException($"Question (id: '{question.Id}' not present in the Poll!");
             }
 
             var nextItemIds = 
-                _transitions
+                Transitions
                     .Where(x => x.FromId == question.Id)
                     .Select(x => x.ToId);
 
-            return _items.Where(x => nextItemIds.Contains(x.Id)).Cast<PollAnswer>();
+            return Items.Where(x => nextItemIds.Contains(x.Id)).Cast<PollAnswer>();
         }
 
         public PollItem FindNextFor(PollAnswer answer)
@@ -108,17 +109,17 @@ namespace Story.Application.Domain.Polls
             }
 
 
-            if (!_items.Any(x => x.Id == answer.Id))
+            if (!Items.Any(x => x.Id == answer.Id))
             {
                 throw new DomainException($"Answer (id: '{answer.Id}' not present in the Poll!");
             }
 
             var nextItemIds =
-                _transitions
+                Transitions
                     .Where(x => x.FromId == answer.Id)
                     .Select(x => x.ToId);
 
-            return _items.Single(x => nextItemIds.Contains(x.Id));
+            return Items.Single(x => nextItemIds.Contains(x.Id));
         }
 
         private static void ValidateQuestionTransition(Guid id, IEnumerable<PollItem> items, IEnumerable<Transition> transitions)

@@ -1,10 +1,12 @@
-﻿using Story.Application.Domain.Common;
+﻿using Newtonsoft.Json;
+using Story.Application.Domain.Common;
 using System;
 
 namespace Story.Application.Domain.Polls
 {
     public sealed class Transition
     {
+        [JsonConstructor]
         private Transition(Guid id, Guid fromId, Guid toId)
         {
             Id = id;

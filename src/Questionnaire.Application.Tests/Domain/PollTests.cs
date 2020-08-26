@@ -19,7 +19,7 @@ namespace Questionnaire.Application.Tests.Domain
             //Arrange+Act+Assert
             Assert
                 .That(
-                    () => new Poll(Guid.Empty, null, null, Guid.Empty, null, null),
+                    () => new Poll(Guid.Empty, null, null, null, null, null),
                     Throws
                         .InstanceOf<DomainException>()
                         .With
@@ -33,7 +33,7 @@ namespace Questionnaire.Application.Tests.Domain
             //Arrange+Act+Assert
             Assert
                 .That(
-                    () => new Poll(Guid.NewGuid(), string.Empty, null, Guid.Empty, null, null),
+                    () => new Poll(Guid.NewGuid(), string.Empty, null, null, null, null),
                     Throws
                         .InstanceOf<DomainException>()
                         .With
@@ -47,7 +47,7 @@ namespace Questionnaire.Application.Tests.Domain
             //Arrange+Act+Assert
             Assert
                 .That(
-                    () => new Poll(Guid.NewGuid(), ProperName, string.Empty, Guid.Empty, null, null),
+                    () => new Poll(Guid.NewGuid(), ProperName, string.Empty, null, null, null),
                     Throws
                         .InstanceOf<DomainException>()
                         .With
@@ -61,21 +61,24 @@ namespace Questionnaire.Application.Tests.Domain
             //Arrange+Act+Assert
             Assert
                 .That(
-                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, Guid.Empty, null, null),
+                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, null, null, null),
                     Throws
                         .InstanceOf<DomainException>()
                         .With
                         .Message
-                        .EqualTo("'rootQuestionId' can't be empty!"));
+                        .EqualTo("'rootQuestion' can't be empty!"));
         }
 
         [Test]
         public void Create_EmptyItems_Throws()
         {
-            //Arrange+Act+Assert
+            // Arrange
+            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
+
+            // Act+Assert
             Assert
                 .That(
-                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, Guid.NewGuid(), Enumerable.Empty<PollItem>(), null),
+                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, Enumerable.Empty<PollItem>(), null),
                     Throws
                         .InstanceOf<DomainException>()
                         .With
@@ -87,12 +90,13 @@ namespace Questionnaire.Application.Tests.Domain
         public void Create_EmptyTransitions_Throws()
         {
             // Arrange 
-            var items = new[] { new PollEnd(Guid.NewGuid(), ProperText) };
+            var rootQuestion = new PollQuestion(Guid.NewGuid(), ProperText);
+            var items = new PollItem [] { rootQuestion, new PollEnd(Guid.NewGuid(), ProperText) };
 
             // Act+Assert
             Assert
                 .That(
-                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, Guid.NewGuid(), items, Enumerable.Empty<Transition>()),
+                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, items, Enumerable.Empty<Transition>()),
                     Throws
                         .InstanceOf<DomainException>()
                         .With
@@ -113,7 +117,7 @@ namespace Questionnaire.Application.Tests.Domain
             // Act+Assert
             Assert
                 .That(
-                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion.Id, items, transitions),
+                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, items, transitions),
                     Throws
                         .InstanceOf<DomainException>()
                         .With
@@ -134,7 +138,7 @@ namespace Questionnaire.Application.Tests.Domain
             // Act+Assert
             Assert
                 .That(
-                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion.Id, items, transitions),
+                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, items, transitions),
                     Throws
                         .InstanceOf<DomainException>()
                         .With
@@ -155,7 +159,7 @@ namespace Questionnaire.Application.Tests.Domain
             // Act+Assert
             Assert
                 .That(
-                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion.Id, items, transitions),
+                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, items, transitions),
                     Throws
                         .InstanceOf<DomainException>()
                         .With
@@ -175,7 +179,7 @@ namespace Questionnaire.Application.Tests.Domain
             // Act+Assert
             Assert
                 .That(
-                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion.Id, items, transitions),
+                    () => new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, items, transitions),
                     Throws
                         .InstanceOf<DomainException>()
                         .With
@@ -194,7 +198,7 @@ namespace Questionnaire.Application.Tests.Domain
             var items = new PollItem[] { rootQuestion, answer, end };
             var transitions = new[] { Transition.Create(rootQuestion, answer), Transition.Create(answer, end) };
 
-            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion.Id, items, transitions);
+            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, items, transitions);
 
             // Act+Assert
             Assert
@@ -220,7 +224,7 @@ namespace Questionnaire.Application.Tests.Domain
             var items = new PollItem[] { rootQuestion, answer, end };
             var transitions = new[] { Transition.Create(rootQuestion, answer), Transition.Create(answer, end) };
 
-            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion.Id, items, transitions);
+            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, items, transitions);
 
             // Act+Assert
             Assert
@@ -251,7 +255,7 @@ namespace Questionnaire.Application.Tests.Domain
                     Transition.Create(answer2, end)
                 };
 
-            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion.Id, items, transitions);
+            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, items, transitions);
 
             // Act
             var actualAnswers = poll.FindNextFor(rootQuestion);
@@ -273,7 +277,7 @@ namespace Questionnaire.Application.Tests.Domain
             var items = new PollItem[] { rootQuestion, answer, end };
             var transitions = new[] { Transition.Create(rootQuestion, answer), Transition.Create(answer, end) };
 
-            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion.Id, items, transitions);
+            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, items, transitions);
 
             // Act+Assert
             Assert
@@ -299,7 +303,7 @@ namespace Questionnaire.Application.Tests.Domain
             var items = new PollItem[] { rootQuestion, answer, end };
             var transitions = new[] { Transition.Create(rootQuestion, answer), Transition.Create(answer, end) };
 
-            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion.Id, items, transitions);
+            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, items, transitions);
 
             // Act+Assert
             Assert
@@ -327,7 +331,7 @@ namespace Questionnaire.Application.Tests.Domain
                     Transition.Create(answer, end)
                 };
 
-            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion.Id, items, transitions);
+            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, items, transitions);
 
             // Act
             var actualEnd = poll.FindNextFor(answer);
@@ -355,7 +359,7 @@ namespace Questionnaire.Application.Tests.Domain
                     Transition.Create(answer2, end)
                 };
 
-            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion.Id, items, transitions);
+            var poll = new Poll(Guid.NewGuid(), ProperName, ProperDescription, rootQuestion, items, transitions);
 
             // Act
             var actualQuestion = poll.FindNextFor(answer1);
