@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
-using Story.Application.Domain.Common;
-using Story.Application.Domain.Polls;
+using Questionnaire.Application.Domain.Common;
+using Questionnaire.Application.Domain.Polls;
 using System;
 
 namespace Questionnaire.Application.Tests.Domain

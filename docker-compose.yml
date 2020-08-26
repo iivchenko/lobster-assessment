@@ -1,25 +1,25 @@
 version: '3.4'
 
 services:
-  story.host:
-    image: ${DOCKER_REGISTRY-}storyhost
+  questionnaire.host:
+    image: ${DOCKER_REGISTRY-}questionnairehost
     build:
       context: .
-      dockerfile: src/Story.Host/Dockerfile
+      dockerfile: src/Questionnaire.Host/Dockerfile
     environment:
       - ConnectionStrings__Redis=redis
-      - StoryAngularAppUrl=http://story.angular.app:4200
+      - QuestionnaireAngularAppUrl=http://questionnaire.angular.app:4200
     depends_on:
       - redis
-      - story.angular.app
+      - questionnaire.angular.app
 
-  story.angular.app:
-    image: ${DOCKER_REGISTRY-}storyangularapp
+  questionnaire.angular.app:
+    image: ${DOCKER_REGISTRY-}questionnaireangularapp
     build:
       context: .
-      dockerfile: src/Story.Host/ClientApp/Dockerfile
+      dockerfile: src/Questionnaire.Host/ClientApp/Dockerfile
     volumes:
-      - ./src/Story.Host/ClientApp:/app
+      - ./src/Questionnaire.Host/ClientApp:/app
 
   redis:
     image: redis

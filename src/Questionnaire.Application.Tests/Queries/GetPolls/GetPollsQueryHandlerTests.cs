@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Moq;
 using NUnit.Framework;
-using Story.Application.Domain.Common;
-using Story.Application.Domain.Polls;
-using Story.Application.Queries.GetPolls;
+using Questionnaire.Application.Domain.Common;
+using Questionnaire.Application.Domain.Polls;
+using Questionnaire.Application.Queries.GetPolls;
 using System;
 using System.Collections.Generic;
 using System.Linq;

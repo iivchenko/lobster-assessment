@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using Moq;
 using NUnit.Framework;
-using Story.Application.Domain.Common;
-using Story.Application.Domain.Polls;
-using Story.Application.Queries;
-using Story.Application.Queries.GetPoll;
+using Questionnaire.Application.Domain.Common;
+using Questionnaire.Application.Domain.Polls;
+using Questionnaire.Application.Queries;
+using Questionnaire.Application.Queries.GetPoll;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Story.Application.Tests.Queries.GetPoll
+namespace Questionnaire.Application.Tests.Queries.GetPoll
 {
     [TestFixture]
     public sealed class GetPollQueryHandlerTests

@@ -5,7 +5,7 @@ var target = Argument("target", "Build");
 Task("Build")
     .Does(() =>
 {
-	DockerComposeBuild("story.host");
+	DockerComposeBuild("questionnaire.host");
 });
 
 Task("Run")
@@ -13,7 +13,7 @@ Task("Run")
     .Does(() =>
 {
 	var settings = new DockerComposeUpSettings { DetachedMode = true };
-	DockerComposeUp(settings, "story.host");
+	DockerComposeUp(settings, "questionnaire.host");
 });
 
 RunTarget(target);
