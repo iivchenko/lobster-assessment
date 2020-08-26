@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Story.Application.Domain.Common;
+using System;
 
 namespace Story.Application.Domain.Polls
 {
@@ -19,22 +20,46 @@ namespace Story.Application.Domain.Polls
 
         public static Transition Create(PollQuestion from, PollAnswer to)
         {
-            // check items not null
-            // check ids not empty
+            if (from == null)
+            {
+                throw new DomainException("Question can't be null!");
+            }
+
+            if (to == null)
+            {
+                throw new DomainException("Answer can't be null!");
+            }
+
             return new Transition(Guid.NewGuid(), from.Id, to.Id);
         }
 
         public static Transition Create(PollAnswer from, PollQuestion to)
         {
-            // check items not null
-            // check ids not empty
+            if (from == null)
+            {
+                throw new DomainException("Answer can't be null!");
+            }
+
+            if (to == null)
+            {
+                throw new DomainException("Question can't be null!");
+            }
+
             return new Transition(Guid.NewGuid(), from.Id, to.Id);
         }
 
         public static Transition Create(PollAnswer from, PollEnd to)
         {
-            // check items not null
-            // check ids not empty
+            if (from == null)
+            {
+                throw new DomainException("Answer can't be null!");
+            }
+
+            if (to == null)
+            {
+                throw new DomainException("End can't be null!");
+            }
+
             return new Transition(Guid.NewGuid(), from.Id, to.Id);
         }
     }

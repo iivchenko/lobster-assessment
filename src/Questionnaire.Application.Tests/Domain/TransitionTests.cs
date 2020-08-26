@@ -1,128 +1,169 @@
 ﻿using NUnit.Framework;
+using Story.Application.Domain.Common;
+using Story.Application.Domain.Polls;
+using System;
 
 namespace Questionnaire.Application.Tests.Domain
 {
     [TestFixture]
     public sealed class TransitionTests
     {
+        private const string ProperText = "Some text";
+
         [Test]
         public void Create_FromQuestionToAnswer_EmptyQuestion_Throws()
         {
             // Arrange
-            // Assert
-            // Act
+            var question = (PollQuestion)null;
+            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
+
+            // Act + Assert
+            Assert
+                .That(
+                    () => Transition.Create(question, answer),
+                    Throws
+                        .InstanceOf<DomainException>()
+                        .With
+                        .Message
+                        .EqualTo("Question can't be null!"));
         }
 
         [Test]
         public void Create_FromQuestionToAnswer_EmptyAnswer_Throws()
         {
             // Arrange
-            // Assert
-            // Act
-        }
+            var question = new PollQuestion(Guid.NewGuid(), ProperText);
+            var answer = (PollAnswer)null;
 
-        [Test]
-        public void Create_FromQuestionToAnswer_EmptyQuestionId_Throws()
-        {
-            // Arrange
-            // Assert
-            // Act
-        }
-
-        [Test]
-        public void Create_FromQuestionToAnswer_EmptyAnswerId_Throws()
-        {
-            // Arrange
-            // Assert
-            // Act
+            // Act + Assert
+            Assert
+                .That(
+                    () => Transition.Create(question, answer),
+                    Throws
+                        .InstanceOf<DomainException>()
+                        .With
+                        .Message
+                        .EqualTo("Answer can't be null!"));
         }
 
         [Test]
         public void Create_FromAnswerToQuestion_EmptyQuestion_Throws()
         {
             // Arrange
-            // Assert
-            // Act
+            var question = (PollQuestion)null;
+            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
+
+            // Act + Assert
+            Assert
+                .That(
+                    () => Transition.Create(answer, question),
+                    Throws
+                        .InstanceOf<DomainException>()
+                        .With
+                        .Message
+                        .EqualTo("Question can't be null!"));
         }
 
         [Test]
         public void Create_FromAnswerToQuestion_EmptyAnswer_Throws()
         {
             // Arrange
-            // Assert
-            // Act
-        }
+            var question = new PollQuestion(Guid.NewGuid(), ProperText);
+            var answer = (PollAnswer)null;
 
-        [Test]
-        public void Create_FromAnswerToQuestion_EmptyQuestionId_Throws()
-        {
-            // Arrange
-            // Assert
-            // Act
-        }
-
-        [Test]
-        public void Create_FromAnswerToQuestion_EmptyAnswerId_Throws()
-        {
-            // Arrange
-            // Assert
-            // Act
+            // Act + Assert
+            Assert
+                .That(
+                    () => Transition.Create(answer, question),
+                    Throws
+                        .InstanceOf<DomainException>()
+                        .With
+                        .Message
+                        .EqualTo("Answer can't be null!"));
         }
 
         [Test]
         public void Create_FromAnswerToEnd_EmptyEnd_Throws()
         {
             // Arrange
-            // Assert
-            // Act
+            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
+            var end = (PollEnd)null;
+
+            // Act + Assert
+            Assert
+                .That(
+                    () => Transition.Create(answer, end),
+                    Throws
+                        .InstanceOf<DomainException>()
+                        .With
+                        .Message
+                        .EqualTo("End can't be null!"));
         }
 
         [Test]
         public void Create_FromAnswerToEnd_EmptyAnswer_Throws()
         {
             // Arrange
-            // Assert
-            // Act
-        }
+            var answer = (PollAnswer)null;
+            var end = new PollEnd(Guid.NewGuid(), ProperText);
 
-        [Test]
-        public void Create_FromAnswerToEnd_EmptyEndId_Throws()
-        {
-            // Arrange
-            // Assert
-            // Act
-        }
-
-        [Test]
-        public void Create_FromAnswerToEnd_EmptyAnswerId_Throws()
-        {
-            // Arrange
-            // Assert
-            // Act
+            // Act + Assert
+            Assert
+                .That(
+                    () => Transition.Create(answer, end),
+                    Throws
+                        .InstanceOf<DomainException>()
+                        .With
+                        .Message
+                        .EqualTo("Answer can't be null!"));
         }
 
         [Test]
         public void Create_FromQuestinToAnswer_AllConditionsMet_CreateNewTransition()
         {
             // Arrange
-            // Assert
+            var question = new PollQuestion(Guid.NewGuid(), ProperText);
+            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
+
             // Act
+            var transition = Transition.Create(question, answer);
+
+            // Assert
+            Assert.That(transition.Id, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(transition.FromId, Is.EqualTo(question.Id));
+            Assert.That(transition.ToId, Is.EqualTo(answer.Id));
         }
 
         [Test]
         public void Create_FromAnswerToQuestion_AllConditionsMet_CreateNewTransition()
         {
             // Arrange
-            // Assert
+            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
+            var question = new PollQuestion(Guid.NewGuid(), ProperText);            
+
             // Act
+            var transition = Transition.Create(answer, question);
+
+            // Assert
+            Assert.That(transition.Id, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(transition.FromId, Is.EqualTo(answer.Id));
+            Assert.That(transition.ToId, Is.EqualTo(question.Id));
         }
 
         [Test]
         public void Create_FromAnswerToEnd_AllConditionsMet_CreateNewTransition()
         {
             // Arrange
-            // Assert
+            var answer = new PollAnswer(Guid.NewGuid(), ProperText);
+            var end = new PollEnd(Guid.NewGuid(), ProperText);
+
             // Act
+            var transition = Transition.Create(answer, end);
+
+            // Assert
+            Assert.That(transition.Id, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(transition.FromId, Is.EqualTo(answer.Id));
+            Assert.That(transition.ToId, Is.EqualTo(end.Id));
         }
     }
 }
