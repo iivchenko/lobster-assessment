@@ -25,9 +25,8 @@ namespace Story.Host
                 .ForMember(dest => dest.RootQuestionId, opt => opt.MapFrom(src => src.RootQuestion.Id));
             CreateMap<GetPollQueryResponse, PollViewModel>();
 
-            CreateMap<Question, GetQuestionQueryResponse>()
-                .ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Nodes));
-            CreateMap<Answer, GetQuestionQueryResponseAnswer>();
+            CreateMap<PollQuestion, GetQuestionQueryResponse>();
+            CreateMap<PollAnswer, GetQuestionQueryResponseAnswer>();
             CreateMap<GetQuestionQueryResponse, QuestionViewModel>();
             CreateMap<GetQuestionQueryResponseAnswer, AnswerSummaryViewModel>();
 

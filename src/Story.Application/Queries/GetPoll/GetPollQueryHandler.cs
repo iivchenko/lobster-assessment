@@ -27,7 +27,7 @@ namespace Story.Application.Queries.GetPoll
 
             if (poll == null)
             {
-                throw new EntityNotFoundException(query.Id, nameof(Story));
+                throw new EntityNotFoundException(query.Id, nameof(Poll));
             }
 
             return _mapper.Map<GetPollQueryResponse>(poll);
