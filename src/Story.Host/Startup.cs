@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Story.Application.Domain.Common;
+using Story.Application.Domain.Polls;
 using Story.Application.Domain.Stories;
 using Story.Host.Utilities.Middlewares;
+using Story.Infrastructure.Polls;
 using Story.Infrastructure.Stories;
 using System;
 
@@ -27,6 +30,7 @@ namespace Story.Host
             services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IStoryRepository, RedisStoryRepository>(x => new RedisStoryRepository(Configuration.GetConnectionString("Redis")));
+            services.AddScoped<IRepository<Poll, Guid>, RedisPollRepository>(x => new RedisPollRepository(Configuration.GetConnectionString("Redis")));
 
             services
                 .AddControllersWithViews()

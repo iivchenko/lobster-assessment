@@ -10,6 +10,7 @@ namespace Story.Host
             var host = CreateHostBuilder(args).Build();
 
             StoriesSeed.Seed(host);
+            PoolsSeed.Seed(host).Wait();
 
             host.Run();
         }
