@@ -88,17 +88,20 @@ export class PollComponent {
   }
 
   buildTree() {
-    this.http.get<FullPoll>(this.baseUrl + 'api/polls/' + this.poll.id + '/full').subscribe(result => {
-      this.handleQuestion(result.root);
+    this.buildTreeAsync().then(_ => {
       this.treeIsBuild = true;
       this.center$.next(true);
       this.zoomToFit$.next(true);
       this.update$.next(true);
-      
-    }, error => console.error(error));
+    });
   }
 
-  handleQuestion(question: FullQuestion) {
+  async buildTreeAsync() {
+    const question = await this.http.get<Question>(this.baseUrl + 'api/polls/' + this.poll.id + '/questions/' + this.poll.rootQuestionId).toPromise();
+    await this.handleQuestion(question);
+  }
+
+  async handleQuestion(question: Question) {
     const node: Node = {
       id: question.id,
       label: question.text,
@@ -117,14 +120,14 @@ export class PollComponent {
       };
 
       this.links.push(link);
-    }
 
-    for (var answer of question.answers) {
-      this.handleAnswer(answer);
+      const fullAnswer = await this.http.get<Answer>(this.baseUrl + 'api/polls/' + this.poll.id + '/answers/' + answer.id).toPromise();
+
+      await this.handleAnswer(fullAnswer);
     }
   }
 
-  handleAnswer(answer: FullAnswer) {
+  async handleAnswer(answer: Answer) {
     const node: Node = {
       id: answer.id,
       label: answer.text,
@@ -136,24 +139,26 @@ export class PollComponent {
 
     this.nodes.push(node);
 
-    switch (answer.nextType) {
+    switch (answer.nextEntityType) {
       case 0:
-        const question: FullQuestion = answer.next;
+        let question = await this.http.get<Question>(this.baseUrl + 'api/polls/' + this.poll.id + '/questions/' + answer.nextEntityId).toPromise();
+
         const link1: Edge = {
           source: answer.id,
           target: question.id,
         };
         this.links.push(link1);
 
-        this.handleQuestion(question);
-
+        await this.handleQuestion(question);
         break;
       case 1:
-        const end: FullEnd = answer.next;
+        const end = await this.http.get<End>(this.baseUrl + 'api/polls/' + this.poll.id + '/end/' + answer.nextEntityId).toPromise();
+
         const link2: Edge = {
           source: answer.id,
           target: end.id,
         };
+
         this.links.push(link2);
 
         const node: Node = {
@@ -200,28 +205,4 @@ interface HistoryItem {
   id: string;
   text: string;
   type: number;
-}
-
-interface FullEnd {
-  id: string;
-  text: string;
-}
-
-interface FullAnswer {
-  id: string;
-  text: string;
-  nextType: number;
-  next: any;
-}
-
-interface FullQuestion {
-  id: string;
-  text: string;
-  answers: FullAnswer[]
-}
-
-interface FullPoll {
-  id: string;
-  name: string;
-  root: FullQuestion;
 }
