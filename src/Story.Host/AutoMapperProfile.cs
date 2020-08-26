@@ -40,7 +40,7 @@ namespace Story.Host
                 .ForMember(dest => dest.NextEntityType, opt => opt.MapFrom(src => src.Next is GetAnswerQueryResponseNextQuestion ? NextEntityType.Question : NextEntityType.End))
                 .ForMember(dest => dest.NextEntityId, opt => opt.MapFrom(src => src.Next.Id));
 
-            CreateMap<TheEnd, GetEndQueryResponse>();
+            CreateMap<PollEnd, GetEndQueryResponse>();
             CreateMap<GetEndQueryResponse, EndViewModel>();
 
             CreateMap<AStory, GetFullStoryQueryResponse>();

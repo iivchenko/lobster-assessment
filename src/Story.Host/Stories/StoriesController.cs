@@ -31,13 +31,5 @@ namespace Story.Host.Stories
 
             return _mapper.Map<FullStoryViewModel>(response);
         }
-
-        [HttpGet("{storyId}/end/{endId}")]
-        public async Task<EndViewModel> End(Guid storyId, Guid endId)
-        {
-            var response = await _mediator.Send(new GetEndQuery { StoryId = storyId, EndId = endId });
-
-            return _mapper.Map<EndViewModel>(response);
-        }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using Story.Application.Domain.Stories;
-using Story.Application.Domain.Stories.Abstractions;
+using Story.Application.Domain.Common;
+using Story.Application.Domain.Polls;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,62 +11,32 @@ namespace Story.Application.Queries.GetEnd
 {
     public sealed class GetEndQueryHandler : IRequestHandler<GetEndQuery, GetEndQueryResponse>
     {
-        private readonly IStoryRepository _storyRepository;
+        private readonly IRepository<Poll, Guid> _pollRepository;
         private readonly IMapper _mapper;
 
         public GetEndQueryHandler(
-            IStoryRepository storyRepository,
+            IRepository<Poll, Guid> pollRepository,
             IMapper mapper)
         {
-            _storyRepository = storyRepository;
+            _pollRepository = pollRepository;
             _mapper = mapper;
         }
 
         public async Task<GetEndQueryResponse> Handle(GetEndQuery query, CancellationToken cancellationToken)
         {
-            var story = await _storyRepository.Read(query.StoryId);
+            var poll = await _pollRepository.Read(query.PollId);
 
-            if (story == null)
+            if (poll == null)
             {
-                throw new EntityNotFoundException(query.StoryId, nameof(Story));
+                throw new EntityNotFoundException(query.PollId, nameof(Poll));
             }
 
-            var end = Find(story.Root, query.EndId);
-
-            if (end == null)
+            if (!(poll.Items.SingleOrDefault(x => x.Id == query.EndId) is PollEnd end))
             {
-                throw new EntityNotFoundException(query.EndId, nameof(TheEnd));
+                throw new EntityNotFoundException(query.EndId, nameof(PollEnd));
             }
 
             return _mapper.Map<GetEndQueryResponse>(end);
-        }
-
-        private static TheEnd Find(NodeLeaf node, Guid id)
-        {
-            switch(node)
-            {
-                case TheEnd end when end.Id == id:
-                    return end;
-
-                case Answer answer:
-                    return Find(answer.Next, id);
-
-                case NodeTree tree:
-                    foreach(var n in tree.Nodes)
-                    {
-                        var result = Find(n, id);
-
-                        if (result != null)
-                        {
-                            return result;
-                        }
-                    }
-
-                    return null;
-
-                default:
-                    return null;
-            }
         }
     }
 }

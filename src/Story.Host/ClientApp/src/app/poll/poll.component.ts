@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
 export class PollComponent {
   public poll: Poll = { id: null, name: null, description: null, rootQuestionId: null };;
   public question: Question = { id: null, text: null, answers: [] };
-  public end: End = { id: null, message: null };
+  public end: End = { id: null, text: null };
   public finish: boolean;
 
   public nodes: Node[] = [];
@@ -69,7 +69,7 @@ export class PollComponent {
         this.http.get<End>(this.baseUrl + 'api/polls/' + this.poll.id + '/end/' + result.nextEntityId).subscribe(result => {
           this.end = result;
 
-          this.pushHistory(this.end.id, this.end.message, 4);
+          this.pushHistory(this.end.id, this.end.text, 4);
 
         }, error => console.error(error));
         this.finish = true;
@@ -158,7 +158,7 @@ export class PollComponent {
 
         const node: Node = {
           id: end.id,
-          label: end.message,
+          label: end.text,
           data: {
             selected: this.history.some(x => x.id === end.id),
             type: 'end'
@@ -193,7 +193,7 @@ interface Answer {
 
 interface End {
   id: string;
-  message: string;
+  text: string;
 }
 
 interface HistoryItem {
@@ -204,7 +204,7 @@ interface HistoryItem {
 
 interface FullEnd {
   id: string;
-  message: string;
+  text: string;
 }
 
 interface FullAnswer {

@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Story.Application.Queries.GetAnswer;
+using Story.Application.Queries.GetEnd;
 using Story.Application.Queries.GetPoll;
 using Story.Application.Queries.GetPolls;
 using Story.Application.Queries.GetQuestion;
@@ -54,6 +55,14 @@ namespace Story.Host.Polls
             var response = await _mediator.Send(new GetAnswerQuery { PollId = pollId, AnswerId = answerId });
 
             return _mapper.Map<AnswerViewModel>(response);
+        }
+
+        [HttpGet("{pollId}/end/{endId}")]
+        public async Task<EndViewModel> End(Guid pollId, Guid endId)
+        {
+            var response = await _mediator.Send(new GetEndQuery { PollId = pollId, EndId = endId });
+
+            return _mapper.Map<EndViewModel>(response);
         }
     }
 
@@ -108,5 +117,12 @@ namespace Story.Host.Polls
         public NextEntityType NextEntityType { get; set; }
 
         public Guid NextEntityId { get; set; }
+    }
+
+    public sealed class EndViewModel
+    {
+        public Guid Id { get; set; }
+
+        public string Text { get; set; }
     }
 }
