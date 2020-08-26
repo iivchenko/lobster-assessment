@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using Story.Application.Domain.Stories;
+using Story.Application.Domain.Common;
+using Story.Application.Domain.Polls;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,56 +11,37 @@ namespace Story.Application.Queries.GetAnswer
 {
     public sealed class GetAnswerQueryHandler : IRequestHandler<GetAnswerQuery, GetAnswerQueryResponse>
     {
-        private readonly IStoryRepository _storyRepository;
+        private readonly IRepository<Poll, Guid> _pollRepository;
         private readonly IMapper _mapper;
 
         public GetAnswerQueryHandler(
-            IStoryRepository storyRepository,
+             IRepository<Poll, Guid> pollRepository,
             IMapper mapper)
         {
-            _storyRepository = storyRepository;
+            _pollRepository = pollRepository;
             _mapper = mapper;
         }
 
         public async Task<GetAnswerQueryResponse> Handle(GetAnswerQuery query, CancellationToken cancellationToken)
         {
-            var story = await _storyRepository.Read(query.StoryId);
+            var poll = await _pollRepository.Read(query.PollId);
 
-            if (story == null)
+            if (poll == null)
             {
-                throw new EntityNotFoundException(query.StoryId, nameof(Story));
+                throw new EntityNotFoundException(query.PollId, nameof(Poll));
             }
 
-            var answer = Find(story.Root.Nodes.Cast<Answer>(), query.AnswerId);
-
-            if (answer == null)
+            if (!(poll.Items.SingleOrDefault(x => x.Id == query.AnswerId) is PollAnswer answer))
             {
-                throw new EntityNotFoundException(query.AnswerId, nameof(Answer));
+                throw new EntityNotFoundException(query.AnswerId, nameof(PollAnswer));
             }
 
-            return _mapper.Map<GetAnswerQueryResponse>(answer);
-        }
+            var next = poll.FindNextFor(answer);
 
-        private static Answer Find(IEnumerable<Answer> answers, Guid id)
-        {
-            foreach(var answer in answers)
-            {
-                if (answer.Id == id)
-                {
-                    return answer;
-                }
+            var response = _mapper.Map<GetAnswerQueryResponse>(answer);
+            response.Next = _mapper.Map<GetAnswerQueryResponseNext>(next);
 
-                var nested = (answer.Next as Question)?.Nodes.Cast<Answer>() ?? Enumerable.Empty<Answer>();
-
-                var item = Find(nested, id);
-
-                if (item != null)
-                {
-                    return item;
-                }
-            }
-
-            return null;
+            return response;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Story.Application.Queries.GetAnswer
 {
@@ -12,18 +11,16 @@ namespace Story.Application.Queries.GetAnswer
         public GetAnswerQueryResponseNext Next { get; set; }
     }
 
-    public enum GetAnswerQueryResponseNextType
-    {
-        Question = 0,
-        End = 1
-    }
-
-    public sealed class GetAnswerQueryResponseNext
+    public abstract class GetAnswerQueryResponseNext
     {
         public Guid Id { get; set; }
+    }
 
-        public GetAnswerQueryResponseNextType Type { get; set; }
+    public sealed class GetAnswerQueryResponseNextQuestion : GetAnswerQueryResponseNext
+    {
+    }
 
-        public string Text { get; set; }
+    public sealed class GetAnswerQueryResponseNextEnd : GetAnswerQueryResponseNext
+    {
     }
 }

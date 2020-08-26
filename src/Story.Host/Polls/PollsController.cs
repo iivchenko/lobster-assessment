@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Story.Application.Queries.GetAnswer;
 using Story.Application.Queries.GetPoll;
 using Story.Application.Queries.GetPolls;
 using Story.Application.Queries.GetQuestion;
@@ -40,11 +41,19 @@ namespace Story.Host.Polls
         }
 
         [HttpGet("{pollId}/questions/{questionId}")]
-        public async Task<QuestionViewModel> Question(Guid pollId, Guid questionId)
+        public async Task<QuestionViewModel> GetQuestion(Guid pollId, Guid questionId)
         {
             var response = await _mediator.Send(new GetQuestionQuery { PollId = pollId, QuestionId = questionId });
 
             return _mapper.Map<QuestionViewModel>(response);
+        }
+
+        [HttpGet("{pollId}/answers/{answerId}")]
+        public async Task<AnswerViewModel> GetAnswer(Guid pollId, Guid answerId)
+        {
+            var response = await _mediator.Send(new GetAnswerQuery { PollId = pollId, AnswerId = answerId });
+
+            return _mapper.Map<AnswerViewModel>(response);
         }
     }
 
@@ -82,5 +91,22 @@ namespace Story.Host.Polls
         public Guid Id { get; set; }
 
         public string Text { get; set; }
+    }
+
+    public enum NextEntityType
+    {
+        Question,
+        End
+    }
+
+    public sealed class AnswerViewModel
+    {
+        public Guid Id { get; set; }
+
+        public string Text { get; set; }
+
+        public NextEntityType NextEntityType { get; set; }
+
+        public Guid NextEntityId { get; set; }
     }
 }

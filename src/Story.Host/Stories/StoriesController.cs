@@ -32,14 +32,6 @@ namespace Story.Host.Stories
             return _mapper.Map<FullStoryViewModel>(response);
         }
 
-        [HttpGet("{storyId}/answers/{answerId}")]
-        public async Task<AnswerViewModel> Answer(Guid storyId, Guid answerId)
-        {
-            var response = await _mediator.Send(new GetAnswerQuery { StoryId = storyId, AnswerId = answerId });
-
-            return _mapper.Map<AnswerViewModel>(response);
-        }
-
         [HttpGet("{storyId}/end/{endId}")]
         public async Task<EndViewModel> End(Guid storyId, Guid endId)
         {

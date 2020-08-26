@@ -30,14 +30,14 @@ namespace Story.Host
             CreateMap<GetQuestionQueryResponse, QuestionViewModel>();
             CreateMap<GetQuestionQueryResponseAnswer, AnswerSummaryViewModel>();
 
-            CreateMap<Answer, GetAnswerQueryResponse>();
-            CreateMap<Question, GetAnswerQueryResponseNext>()
-                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => GetAnswerQueryResponseNextType.Question));
-            CreateMap<TheEnd, GetAnswerQueryResponseNext>()
-                .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Message))
-                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => GetAnswerQueryResponseNextType.End));
+            CreateMap<PollAnswer, GetAnswerQueryResponse>();
+            CreateMap<PollItem, GetAnswerQueryResponseNext>()
+               .Include<PollQuestion, GetAnswerQueryResponseNextQuestion>()
+               .Include<PollEnd, GetAnswerQueryResponseNextEnd>();
+            CreateMap<PollQuestion, GetAnswerQueryResponseNextQuestion>();
+            CreateMap<PollEnd, GetAnswerQueryResponseNextEnd>();
             CreateMap<GetAnswerQueryResponse, AnswerViewModel>()
-                .ForMember(dest => dest.NextEntityType, opt => opt.MapFrom(src => src.Next.Type))
+                .ForMember(dest => dest.NextEntityType, opt => opt.MapFrom(src => src.Next is GetAnswerQueryResponseNextQuestion ? NextEntityType.Question : NextEntityType.End))
                 .ForMember(dest => dest.NextEntityId, opt => opt.MapFrom(src => src.Next.Id));
 
             CreateMap<TheEnd, GetEndQueryResponse>();
