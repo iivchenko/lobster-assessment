@@ -3,7 +3,6 @@ using MediatR;
 using Questionnaire.Application.Domain.Common;
 using Questionnaire.Application.Domain.Polls;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +14,7 @@ namespace Questionnaire.Application.Queries.GetAnswer
         private readonly IMapper _mapper;
 
         public GetAnswerQueryHandler(
-             IRepository<Poll, Guid> pollRepository,
+            IRepository<Poll, Guid> pollRepository,
             IMapper mapper)
         {
             _pollRepository = pollRepository;

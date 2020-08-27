@@ -32,6 +32,7 @@ namespace Questionnaire.Host
             services
                 .AddControllersWithViews()
                 .AddNewtonsoftJson();
+
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
@@ -66,7 +67,7 @@ namespace Questionnaire.Host
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Questionnaire API V1");
             });
 
             app.UseRouting();

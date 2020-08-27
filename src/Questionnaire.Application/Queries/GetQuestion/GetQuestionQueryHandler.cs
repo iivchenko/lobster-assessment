@@ -4,7 +4,6 @@ using Questionnaire.Application.Domain.Common;
 using Questionnaire.Application.Domain.Polls;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 

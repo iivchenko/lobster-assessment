@@ -2,7 +2,7 @@
 Lobster Assessment is an implementation of .NET Software Engineer Technical Assignment task. [pdf](docs/assessment.pdf)
 
 ## High level design 
-![High level design](docs/high-level-design-v0.1.png)
+![High level design](docs/high-level-design-v0.2.png)
 
 ## Prerequisites
 * docker 
@@ -12,7 +12,7 @@ Lobster Assessment is an implementation of .NET Software Engineer Technical Assi
 
 ## How to run application without Visual Studio
  * Just run **_start.bat** script
- * Grab url for **storyhost** container and open in the browser
+ * Grab url for **questionnairehost** container and open in the browser
  * Enjoy!
 
 ## Releases
