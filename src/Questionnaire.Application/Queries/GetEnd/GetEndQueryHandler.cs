@@ -31,7 +31,9 @@ namespace Questionnaire.Application.Queries.GetEnd
                 throw new EntityNotFoundException(query.PollId, nameof(Poll));
             }
 
-            if (!(poll.Items.SingleOrDefault(x => x.Id == query.EndId) is End end))
+            var end = poll.GetEnd(query.EndId);
+
+            if (end == null)
             {
                 throw new EntityNotFoundException(query.EndId, nameof(End));
             }

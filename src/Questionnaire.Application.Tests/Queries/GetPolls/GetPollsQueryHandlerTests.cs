@@ -93,7 +93,6 @@ namespace Questionnaire.Application.Tests.Queries.GetPolls
             var end1 = new End(Guid.NewGuid(), "Good for you!");
             var end2 = new End(Guid.NewGuid(), "There there");
 
-            var items = new PollItem[] { question, answer1, answer2, end1, end2 };
             var transitions = new[]
             {
                 Transition.Create(question, answer1),
@@ -109,7 +108,6 @@ namespace Questionnaire.Application.Tests.Queries.GetPolls
                     "Test",
                     "Just a test poll",
                     question,
-                    items,
                     transitions
                 );
         }

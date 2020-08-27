@@ -7,18 +7,18 @@ namespace Questionnaire.Application.Domain.Polls
     public sealed class Transition
     {
         [JsonConstructor]
-        private Transition(Guid id, Guid fromId, Guid toId)
+        private Transition(Guid id, PollItem from, PollItem to)
         {
             Id = id;
-            FromId = fromId;
-            ToId = toId;
+            From = from;
+            To = to;
         }
 
         public Guid Id { get; private set; }
 
-        public Guid FromId { get; private set; }
+        public PollItem From { get; private set; }
 
-        public Guid ToId { get; private set; }
+        public PollItem To { get; private set; }
 
         public static Transition Create(Question from, Answer to)
         {
@@ -32,7 +32,7 @@ namespace Questionnaire.Application.Domain.Polls
                 throw new DomainException("Answer can't be null!");
             }
 
-            return new Transition(Guid.NewGuid(), from.Id, to.Id);
+            return new Transition(Guid.NewGuid(), from, to);
         }
 
         public static Transition Create(Answer from, Question to)
@@ -47,7 +47,7 @@ namespace Questionnaire.Application.Domain.Polls
                 throw new DomainException("Question can't be null!");
             }
 
-            return new Transition(Guid.NewGuid(), from.Id, to.Id);
+            return new Transition(Guid.NewGuid(), from, to);
         }
 
         public static Transition Create(Answer from, End to)
@@ -62,7 +62,7 @@ namespace Questionnaire.Application.Domain.Polls
                 throw new DomainException("End can't be null!");
             }
 
-            return new Transition(Guid.NewGuid(), from.Id, to.Id);
+            return new Transition(Guid.NewGuid(), from, to);
         }
     }
 }

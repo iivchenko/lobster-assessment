@@ -1,14 +1,16 @@
-﻿using Questionnaire.Application.Domain.Common;
+﻿using Newtonsoft.Json;
+using Questionnaire.Application.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace Questionnaire.Application.Domain.Polls
 {
     public sealed class Poll : IAggregateRoot<Guid>
     {
-        public Poll(Guid id, string name, string description, Question rootQuestion, IEnumerable<PollItem> items, IEnumerable<Transition> transitions)
+        private readonly ILookup<Guid, Transition> _lookup;
+
+        public Poll(Guid id, string name, string description, Question rootQuestion, IEnumerable<Transition> transitions)
         {
             if (id == Guid.Empty)
             {
@@ -30,42 +32,26 @@ namespace Questionnaire.Application.Domain.Polls
                 throw new DomainException($"'{nameof(rootQuestion)}' can't be empty!");
             }
 
-            if (items == null || !items.Any())
-            {
-                throw new DomainException($"'{nameof(items)}' can't be empty!");
-            }
-
             if (transitions == null || !transitions.Any())
             {
                 throw new DomainException($"'{nameof(transitions)}' can't be empty!");
             }
 
-            if (!items.Any(x => x.Id == rootQuestion.Id))
+            if (!transitions.Any(x => x.From.Id == rootQuestion.Id))
             {
-                throw new DomainException($"Root questioin (id: '{rootQuestion.Id}' is not presetn in items!");
+                throw new DomainException($"Root question (id: '{rootQuestion.Id}' is not present in transitions!");
             }
 
-            ValidateQuestionTransition(rootQuestion.Id, items, transitions);
+            ValidateTransitions(rootQuestion, transitions);
 
-            foreach(var item in items)
-            {
-                switch(item)
-                {
-                    case Question question:
-                        ValidateQuestionTransition(question.Id, items, transitions);
-                        break;
-                    case Answer answer:
-                        ValidateAnswerTransition(answer.Id, items, transitions);
-                        break;
-                }
-            }
-
+            var groupFrom = transitions.Select(x => new { id = x.From.Id, transition = x });
+            var groupTo = transitions.Select(x => new { id = x.To.Id, transition = x });
+            _lookup = groupFrom.Concat(groupTo).ToLookup(key => key.id, value => value.transition);
+            
             Id = id;
             Name = name;
             Description = description;
             RootQuestion = rootQuestion;
-
-            Items = items;
             Transitions = transitions;
         }
 
@@ -77,9 +63,59 @@ namespace Questionnaire.Application.Domain.Polls
 
         public Question RootQuestion { get; private set; }
 
-        public IEnumerable<PollItem> Items { get; private set; }
+        [JsonProperty]
+        private IEnumerable<Transition> Transitions { get; set; }
 
-        public IEnumerable<Transition> Transitions { get; private set; }
+        public Question GetQuestion(Guid id)
+        {
+            if (!_lookup.Contains(id))
+            {
+                return null;
+            }
+
+            var item = _lookup[id].First().From;
+
+            if (!(item is Question question))
+            {
+                throw new DomainException($"Provided (id: '{id}' present in the Poll but it is not a Question!");
+            }
+
+            return question;
+        }
+
+        public Answer GetAnswer(Guid id)
+        {
+            if (!_lookup.Contains(id))
+            {
+                return null;
+            }
+
+            var item = _lookup[id].First().From;
+
+            if (!(item is Answer answer))
+            {
+                throw new DomainException($"Provided (id: '{id}' present in the Poll but it is not a Answer!");
+            }
+
+            return answer;
+        }
+
+        public End GetEnd(Guid id)
+        {
+            if (!_lookup.Contains(id))
+            {
+                return null;
+            }
+
+            var item = _lookup[id].First().To;
+
+            if (!(item is End end))
+            {
+                throw new DomainException($"Provided (id: '{id}' present in the Poll but it is not an End!");
+            }
+
+            return end;
+        }
 
         public IEnumerable<Answer> FindNextFor(Question question)
         {
@@ -88,17 +124,12 @@ namespace Questionnaire.Application.Domain.Polls
                 throw new DomainException($"Question should not be null!");
             }
 
-            if (!Items.Any(x => x.Id == question.Id))
+            if(!_lookup.Contains(question.Id))
             {
                 throw new DomainException($"Question (id: '{question.Id}' not present in the Poll!");
             }
 
-            var nextItemIds = 
-                Transitions
-                    .Where(x => x.FromId == question.Id)
-                    .Select(x => x.ToId);
-
-            return Items.Where(x => nextItemIds.Contains(x.Id)).Cast<Answer>();
+            return _lookup[question.Id].Where(x => x.From.Id == question.Id).Select(x => x.To).Cast<Answer>();
         }
 
         public PollItem FindNextFor(Answer answer)
@@ -108,37 +139,41 @@ namespace Questionnaire.Application.Domain.Polls
                 throw new DomainException($"Answer should not be null!");
             }
 
-
-            if (!Items.Any(x => x.Id == answer.Id))
+            if (!_lookup.Contains(answer.Id))
             {
                 throw new DomainException($"Answer (id: '{answer.Id}' not present in the Poll!");
             }
 
-            var nextItemIds =
-                Transitions
-                    .Where(x => x.FromId == answer.Id)
-                    .Select(x => x.ToId);
+            return _lookup[answer.Id].Single(x => x.From.Id == answer.Id).To;
+        }       
 
-            return Items.Single(x => nextItemIds.Contains(x.Id));
-        }
-
-        private static void ValidateQuestionTransition(Guid id, IEnumerable<PollItem> items, IEnumerable<Transition> transitions)
+        private static void ValidateTransitions(Question root, IEnumerable<Transition> transitions)
         {
-            var questionTransitions = transitions.Where(x => x.FromId == id);
+            var transitionTo =
+               transitions
+                   .Where(x => !(x.To is End))
+                   .Select(x => x.To);
 
-            if (!questionTransitions.Any())
+            foreach (var transition in transitionTo)
             {
-                throw new DomainException($"Question (id: '{id}' should have transition!");
+                if (!transitions.Any(y => y.From.Id == transition.Id))
+                {
+                    throw new DomainException($"{transition.GetType().Name} (id: '{transition.Id}' misses transition To!");
+                }
             }
-        }
 
-        private static void ValidateAnswerTransition(Guid id, IEnumerable<PollItem> items, IEnumerable<Transition> transitions)
-        {
-            var answerTransitions = transitions.Where(x => x.FromId == id);
+            var transitionsFrom =
+               transitions
+                   .Where(x => x.From.Id != root.Id)
+                   .Where(x => !(x.From is End))
+                   .Select(x => x.From);
 
-            if (!answerTransitions.Any())
+            foreach (var transition in transitionsFrom)
             {
-                throw new DomainException($"Answer (id: '{id}' should have transition!");
+                if (!transitions.Any(y => y.To.Id == transition.Id))
+                {
+                    throw new DomainException($"{transition.GetType().Name} (id: '{transition.Id}' misses transition From!");
+                }
             }
         }
     }

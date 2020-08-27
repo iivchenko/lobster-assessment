@@ -31,7 +31,9 @@ namespace Questionnaire.Application.Queries.GetAnswer
                 throw new EntityNotFoundException(query.PollId, nameof(Poll));
             }
 
-            if (!(poll.Items.SingleOrDefault(x => x.Id == query.AnswerId) is Answer answer))
+            var answer = poll.GetAnswer(query.AnswerId);
+
+            if (answer == null)
             {
                 throw new EntityNotFoundException(query.AnswerId, nameof(Answer));
             }

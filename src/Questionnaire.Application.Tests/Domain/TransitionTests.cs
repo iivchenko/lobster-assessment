@@ -130,8 +130,8 @@ namespace Questionnaire.Application.Tests.Domain
 
             // Assert
             Assert.That(transition.Id, Is.Not.EqualTo(Guid.Empty));
-            Assert.That(transition.FromId, Is.EqualTo(question.Id));
-            Assert.That(transition.ToId, Is.EqualTo(answer.Id));
+            Assert.That(transition.From, Is.EqualTo(question));
+            Assert.That(transition.To, Is.EqualTo(answer));
         }
 
         [Test]
@@ -146,8 +146,8 @@ namespace Questionnaire.Application.Tests.Domain
 
             // Assert
             Assert.That(transition.Id, Is.Not.EqualTo(Guid.Empty));
-            Assert.That(transition.FromId, Is.EqualTo(answer.Id));
-            Assert.That(transition.ToId, Is.EqualTo(question.Id));
+            Assert.That(transition.From, Is.EqualTo(answer));
+            Assert.That(transition.To, Is.EqualTo(question));
         }
 
         [Test]
@@ -162,8 +162,8 @@ namespace Questionnaire.Application.Tests.Domain
 
             // Assert
             Assert.That(transition.Id, Is.Not.EqualTo(Guid.Empty));
-            Assert.That(transition.FromId, Is.EqualTo(answer.Id));
-            Assert.That(transition.ToId, Is.EqualTo(end.Id));
+            Assert.That(transition.From, Is.EqualTo(answer));
+            Assert.That(transition.To, Is.EqualTo(end));
         }
     }
 }

@@ -74,7 +74,6 @@ namespace Questionnaire.Application.Tests.Queries.GetAnswer
             var answer = new Answer(Guid.NewGuid(), "Good");
             var end = new End(Guid.NewGuid(), "Good for you!");
 
-            var items = new PollItem[] { question, answer, end };
             var transitions = new[]
             {
                 Transition.Create(question, answer),
@@ -88,7 +87,6 @@ namespace Questionnaire.Application.Tests.Queries.GetAnswer
                     "Test",
                     "Just a test poll",
                     question,
-                    items,
                     transitions
                 );
 
@@ -126,7 +124,6 @@ namespace Questionnaire.Application.Tests.Queries.GetAnswer
             var answer = new Answer(answerId, "Good");
             var end = new End(Guid.NewGuid(), "Good for you!");
 
-            var items = new PollItem[] { question, answer, end };
             var transitions = new[]
             {
                 Transition.Create(question, answer),
@@ -140,7 +137,6 @@ namespace Questionnaire.Application.Tests.Queries.GetAnswer
                     "Test",
                     "Just a test poll",
                     question,
-                    items,
                     transitions
                 );
 

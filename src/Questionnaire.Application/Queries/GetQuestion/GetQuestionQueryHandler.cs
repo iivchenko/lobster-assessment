@@ -32,7 +32,9 @@ namespace Questionnaire.Application.Queries.GetQuestion
                 throw new EntityNotFoundException(query.PollId, nameof(Poll));
             }
 
-            if (!(poll.Items.SingleOrDefault(x => x.Id == query.QuestionId) is Question question))
+            var question = poll.GetQuestion(query.QuestionId);
+
+            if (question == null)
             {
                 throw new EntityNotFoundException(query.QuestionId, nameof(Question));
             }
