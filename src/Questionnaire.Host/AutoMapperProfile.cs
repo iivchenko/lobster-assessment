@@ -36,7 +36,7 @@ namespace Questionnaire.Host
             CreateMap<Question, GetAnswerQueryResponseNextQuestion>();
             CreateMap<End, GetAnswerQueryResponseNextEnd>();
             CreateMap<GetAnswerQueryResponse, AnswerViewModel>()
-                .ForMember(dest => dest.NextEntityType, opt => opt.MapFrom(src => src.Next is GetAnswerQueryResponseNextQuestion ? NextEntityType.Question : NextEntityType.End))
+                .ForMember(dest => dest.NextEntityType, opt => opt.MapFrom(src => src.Next is GetAnswerQueryResponseNextQuestion ? AnswerViewModel.EntityType.Question : AnswerViewModel.EntityType.End))
                 .ForMember(dest => dest.NextEntityId, opt => opt.MapFrom(src => src.Next.Id));
 
             // End flow
