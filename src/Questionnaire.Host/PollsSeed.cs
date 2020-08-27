@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Questionnaire.Application.Domain.Common;
 using Questionnaire.Application.Domain.Polls;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Questionnaire.Host
@@ -20,37 +21,121 @@ namespace Questionnaire.Host
 
                 if (count == 0)
                 {
-                    await repository.Create(TestPoll());
-
+                    await repository.Create(CreateDoughnutHuntPoll());
                 }
             }
         }
 
-        private static Poll TestPoll()
+        private static Poll CreateDoughnutHuntPoll()
         {
-            var question = new Question(Guid.NewGuid(), "How are you doing?");
-            var answer1 = new Answer(Guid.NewGuid(), "Good");
-            var answer2 = new Answer(Guid.NewGuid(), "Bad");
-            var end1 = new End(Guid.NewGuid(), "Good for you!");
-            var end2 = new End(Guid.NewGuid(), "There there");
-
-            var transitions = new[]
-            {
-                Transition.Create(question, answer1),
-                Transition.Create(question, answer2),
-                Transition.Create(answer1, end1),
-                Transition.Create(answer2, end2),
-            };
-
-            return
-                new Poll
+            var transitions = new List<Transition>();
+            return CreatePoll
                 (
-                    Guid.NewGuid(),
-                    "Test",
-                    "Just a test poll",
-                    question,
-                    transitions
+                    "Doughnut decision helper",
+                    "This is not a game! All people in the world needs the guidence on if they want or need a Doughnunt. This guide is about saving your life and preventing wars!",
+                    CreateQuestion
+                    (
+                        "Do I want a Doughnut?",
+                        ref transitions,
+                        CreateAnswer
+                        (
+                            "Yes",
+                            ref transitions,
+                            CreateQuestion
+                            (
+                                "Do I deserve it?",
+                                ref transitions,
+                                CreateAnswer
+                                (
+                                    "Yes",
+                                    ref transitions,
+                                    CreateQuestion
+                                    (
+                                        "Are you sure?",
+                                        ref transitions,
+                                        CreateAnswer
+                                        (
+                                            "Yes",
+                                            ref transitions,
+                                            "Get it."
+                                        ),
+                                        CreateAnswer
+                                        (
+                                            "No",
+                                            ref transitions,
+                                            "Do jumping jacks first."
+                                        )
+                                    )
+                                ),
+                                CreateAnswer
+                                (
+                                    "No",
+                                    ref transitions,
+                                    CreateQuestion
+                                    (
+                                        "Is it a good doughnut?",
+                                        ref transitions,
+                                        CreateAnswer
+                                        (
+                                            "Yes",
+                                            ref transitions,
+                                            "What are you waiting for? Grab it now."
+                                        ),
+                                        CreateAnswer
+                                        (
+                                            "No",
+                                            ref transitions,
+                                            "Wait til you find a sinful, unforgettable doughnut."
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        CreateAnswer
+                        (
+                            "No",
+                            ref transitions,
+                            "Maybe you want an apple?"
+                        )
+                    ),
+                    ref transitions
                 );
-        }      
+        }
+
+        private static Poll CreatePoll(string name, string description, Question root, ref List<Transition> transitions)
+        {
+            return new Poll(Guid.NewGuid(), name, description, root, transitions);
+        }
+
+        private static Question CreateQuestion(string text, ref List<Transition> transitions, params Answer[] answers)
+        {
+            var question = new Question(Guid.NewGuid(), text);
+
+            foreach(var answer in answers)
+            {
+                transitions.Add(Transition.Create(question, answer));
+            }
+
+            return question;
+        }
+
+        private static Answer CreateAnswer(string text, ref List<Transition> transitions, Question question)
+        {
+            var answer = new Answer(Guid.NewGuid(), text);
+
+            transitions.Add(Transition.Create(answer, question));
+
+            return answer;
+        }
+
+        private static Answer CreateAnswer(string text, ref List<Transition> transitions, string endText)
+        {
+            var answer = new Answer(Guid.NewGuid(), text);
+            var end = new End(Guid.NewGuid(), endText);
+
+            transitions.Add(Transition.Create(answer, end));
+
+            return answer;
+        }
     }
 }
